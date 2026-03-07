@@ -12,7 +12,7 @@ plugins {
 
     // https://github.com/Fallen-Breath/yamlang
     id("me.fallenbreath.yamlang") version "1.5.0" apply false
-    id("com.diffplug.spotless") version "8.2.1"
+    id("com.diffplug.spotless") version "8.3.0"
     id("com.vanniktech.maven.publish") version "0.36.0"
 }
 

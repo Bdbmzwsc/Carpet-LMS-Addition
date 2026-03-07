@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.0",
-    "@astrojs/starlight": "^0.37.4",
-    "astro": "^5.17.1",
+    "@astrojs/starlight": "^0.37.7",
+    "astro": "^5.18.0",
     "js-yaml": "^4.1.1"
   },
   "packageManager": "pnpm@10.28.2"
