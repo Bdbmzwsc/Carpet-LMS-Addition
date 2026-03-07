@@ -17,6 +17,7 @@
     "main": ["cn.nm.lms.carpetlmsaddition.CarpetLMSAdditionMod"]
   },
   "mixins": ["carpet-lms-addition.mixins.json"],
+  "accessWidener": "carpet-lms-addition.accesswidener",
   "depends": {
     "fabricloader": "${fabricloader_dependency}",
     "minecraft": "${minecraft_dependency}",

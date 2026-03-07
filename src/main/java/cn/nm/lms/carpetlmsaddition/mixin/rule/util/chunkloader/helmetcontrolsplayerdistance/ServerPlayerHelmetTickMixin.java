@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.core.SectionPos;
 import net.minecraft.server.level.ChunkMap;
+import net.minecraft.server.level.DistanceManager;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -32,6 +33,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import cn.nm.lms.carpetlmsaddition.rule.util.chunkloader.helmetcontrolsplayerdistance.HelmetControlsPlayerDistanceRule;
+
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 
 @Mixin(
     ServerPlayer.class
@@ -66,12 +69,20 @@ public abstract class ServerPlayerHelmetTickMixin
     @Unique
     private void refreshTickets$LMS(ServerPlayer player)
     {
-        ServerLevel level = (ServerLevel) player.level();
+        ServerLevel level = player.level();
         ChunkMap chunkMap = level.getChunkSource().chunkMap;
+        DistanceManager distanceManager = chunkMap.getDistanceManager();
 
         SectionPos sectionPos = SectionPos.of(player);
-        chunkMap.getDistanceManager().removePlayer(sectionPos, player);
-        chunkMap.getDistanceManager().addPlayer(sectionPos, player);
+        long chunkKey = this.chunkKey$LMS(sectionPos);
+
+        ObjectSet<ServerPlayer> trackedPlayers = distanceManager.playersPerChunk.get(chunkKey);
+        if (trackedPlayers != null && trackedPlayers.contains(player))
+        {
+            distanceManager.removePlayer(sectionPos, player);
+        }
+
+        distanceManager.addPlayer(sectionPos, player);
 
         ((ChunkMapInvokerMixin) chunkMap).updateChunkTracking$LMS(player);
     }
@@ -91,6 +102,16 @@ public abstract class ServerPlayerHelmetTickMixin
 
         if (firstSeen || ruleChanged) return true;
 
-        return player.tickCount % 300 != 0;
+        return player.tickCount % 300 == 0;
+    }
+
+    @Unique
+    private long chunkKey$LMS(SectionPos sectionPos)
+    {
+        //#if MC>=260100
+        return sectionPos.chunk().pack();
+        //#else
+        //$$ return sectionPos.chunk().toLong();
+        //#endif
     }
 }

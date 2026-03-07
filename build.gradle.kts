@@ -150,6 +150,7 @@ spotless {
             "gradle.properties",
             "gradle/wrapper/gradle-wrapper.properties",
             "versions/*/gradle.properties",
+            "versions/*/carpet-lms-addition.accesswidener",
             "copyright.txt",
             "mappings/*.txt",
             "website/public/_headers",

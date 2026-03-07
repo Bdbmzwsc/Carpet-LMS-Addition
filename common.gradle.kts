@@ -144,6 +144,7 @@ loomExtension.runs {
         isIdeConfigGenerated = false
     }
 }
+loomExtension.accessWidenerPath.set(file("carpet-lms-addition.accesswidener"))
 
 var modVersionSuffix = ""
 val artifactVersion = modVersion
@@ -199,6 +200,7 @@ val modProperties =
     )
 
 tasks.named<ProcessResources>("processResources") {
+    from(project.file("carpet-lms-addition.accesswidener"))
     inputs.properties(modProperties)
 
     filesMatching("fabric.mod.json") {
