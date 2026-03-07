@@ -1,2 +1,3 @@
 accessWidener v2 named
 accessible field net/minecraft/server/level/DistanceManager playersPerChunk Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
+accessible method net/minecraft/server/level/ChunkMap updateChunkTracking (Lnet/minecraft/server/level/ServerPlayer;)V

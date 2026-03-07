@@ -84,7 +84,7 @@ public abstract class ServerPlayerHelmetTickMixin
 
         distanceManager.addPlayer(sectionPos, player);
 
-        ((ChunkMapInvokerMixin) chunkMap).updateChunkTracking$LMS(player);
+        chunkMap.updateChunkTracking(player);
     }
 
     @Unique
