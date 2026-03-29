@@ -21,9 +21,13 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.UUID;
 
-import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.level.storage.LevelResource;
+
+import carpet.CarpetServer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,11 +39,9 @@ import cn.nm.lms.carpetlmsaddition.CarpetLMSAdditionMod;
 public final class PlayerConfig
 {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path FILE = FabricLoader.getInstance()
-                                                 .getConfigDir()
-                                                 .resolve(CarpetLMSAdditionMod.MOD_ID + ".json");
     private static final String PLAYER_CONFIG_KEY = "playerConfig";
     private static JsonObject root;
+    private static Path loadedFile;
 
     public static String get(UUID playerUUID, String configName)
     {
@@ -54,6 +56,7 @@ public final class PlayerConfig
 
     public static void set(UUID playerUUID, String configName, String value)
     {
+        Path file = currentFile();
         JsonObject data = ensureLoaded();
         JsonObject allConfig = data.getAsJsonObject(PLAYER_CONFIG_KEY);
         if (allConfig == null)
@@ -70,13 +73,14 @@ public final class PlayerConfig
         data.add(PLAYER_CONFIG_KEY, allConfig);
         try
         {
-            Files.createDirectories(FILE.getParent());
+            Files.createDirectories(file.getParent());
             try (
-                    BufferedWriter writer = Files.newBufferedWriter(FILE)
+                    BufferedWriter writer = Files.newBufferedWriter(file)
             )
             {
                 GSON.toJson(data, writer);
             }
+            loadedFile = file;
         }
         catch (IOException e)
         {
@@ -86,14 +90,16 @@ public final class PlayerConfig
 
     private static JsonObject ensureLoaded()
     {
-        if (root != null) return root;
-        if (Files.exists(FILE))
+        Path file = currentFile();
+        if (root != null && file.equals(loadedFile)) return root;
+        if (Files.exists(file))
         {
             try (
-                    BufferedReader reader = Files.newBufferedReader(FILE)
+                    BufferedReader reader = Files.newBufferedReader(file)
             )
             {
                 root = JsonParser.parseReader(reader).getAsJsonObject();
+                loadedFile = file;
             }
             catch (IOException e)
             {
@@ -103,7 +109,17 @@ public final class PlayerConfig
         else
         {
             root = new JsonObject();
+            loadedFile = file;
         }
         return root;
+    }
+
+    private static Path currentFile()
+    {
+        MinecraftServer server = CarpetServer.minecraft_server;
+        return Objects.requireNonNull(server, "Minecraft server not ready")
+                      .getWorldPath(LevelResource.ROOT)
+                      .resolve(CarpetLMSAdditionMod.COMPACT_NAME)
+                      .resolve("config.json");
     }
 }

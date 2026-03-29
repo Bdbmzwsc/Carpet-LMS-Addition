@@ -31,6 +31,7 @@ import cn.nm.lms.carpetlmsaddition.rule.RulesBootstrap;
 public class CarpetLMSAdditionMod implements ModInitializer, CarpetExtension
 {
     public static final String MOD_ID = "carpet-lms-addition";
+    public static final String COMPACT_NAME = MOD_ID.replace("-", "");  // carpetlmsaddition
     public static final Logger LOGGER = LogManager.getLogger(getModName());
 
     public static String getVersion()
@@ -41,24 +42,6 @@ public class CarpetLMSAdditionMod implements ModInitializer, CarpetExtension
     public static String getModName()
     {
         return ModInfoHolder.NAME;
-    }
-
-    private static class ModInfoHolder
-    {
-        private static final ModContainer CONTAINER;
-        private static final String NAME;
-        private static final String VERSION;
-        static
-        {
-            CONTAINER = FabricLoader.getInstance()
-                                    .getModContainer(MOD_ID)
-                                    .orElseThrow(
-                                            () -> new RuntimeException("Mod not found: " + MOD_ID)
-                                    );
-            ;
-            NAME = CONTAINER.getMetadata().getName();
-            VERSION = CONTAINER.getMetadata().getVersion().getFriendlyString();
-        }
     }
 
     @Override
@@ -85,5 +68,23 @@ public class CarpetLMSAdditionMod implements ModInitializer, CarpetExtension
     public java.util.Map<String, String> canHasTranslations(String lang)
     {
         return CarpetLMSAdditionTranslations.translations(lang);
+    }
+
+    private static class ModInfoHolder
+    {
+        private static final ModContainer CONTAINER;
+        private static final String NAME;
+        private static final String VERSION;
+
+        static
+        {
+            CONTAINER = FabricLoader.getInstance()
+                                    .getModContainer(MOD_ID)
+                                    .orElseThrow(
+                                            () -> new RuntimeException("Mod not found: " + MOD_ID)
+                                    );
+            NAME = CONTAINER.getMetadata().getName();
+            VERSION = CONTAINER.getMetadata().getVersion().getFriendlyString();
+        }
     }
 }
