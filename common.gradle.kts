@@ -128,7 +128,7 @@ val commonVmArgs = listOf("-Dmixin.debug.export=true", "-Dmixin.debug.countInjec
 loomExtension.runConfigs.configureEach {
     // to make sure it generates all "Minecraft Client (:subproject_name)" applications
     isIdeConfigGenerated = true
-    runDir = "../../run"
+    runDir = if (unobfuscated) "../../run" else "../../run-obsuscated"
     vmArgs(commonVmArgs)
 }
 loomExtension.runs {
