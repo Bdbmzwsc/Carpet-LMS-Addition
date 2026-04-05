@@ -33,3 +33,7 @@ bin/
 
 run/
 run-obsuscated/
+
+
+*.lck
+*.part
