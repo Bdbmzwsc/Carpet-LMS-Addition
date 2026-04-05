@@ -32,6 +32,7 @@ import cn.nm.lms.carpetlmsaddition.rule.entity.projectile.PearlIgnoreEntityColli
 import cn.nm.lms.carpetlmsaddition.rule.entity.projectile.PearlNoTpRule;
 import cn.nm.lms.carpetlmsaddition.rule.entity.shulker.ShulkerDupLowHealthFailChanceRule;
 import cn.nm.lms.carpetlmsaddition.rule.entity.shulker.ShulkerDupNearbyLimitRule;
+import cn.nm.lms.carpetlmsaddition.rule.entity.slime.GlobalSlimeChunkRule;
 import cn.nm.lms.carpetlmsaddition.rule.recipes.elytrarecipe.ElytraRecipeRule;
 import cn.nm.lms.carpetlmsaddition.rule.recipes.enchantedgoldenapplerecipe.EnchantedGoldenAppleRecipeRule;
 import cn.nm.lms.carpetlmsaddition.rule.recipes.furnace.shulkerbox.ShulkerBoxFurnaceRule;
@@ -56,6 +57,7 @@ public final class RulesBootstrap
                 ExplosionProofBuddingAmethystRule.class,
                 FragileTrialSpawnerRule.class,
                 FragileVaultRule.class,
+                GlobalSlimeChunkRule.class,
                 HelmetControlsPlayerDistanceRule.class,
                 LowHealthSpectatorRule.class,
                 MinecartChunkLoaderRule.class,

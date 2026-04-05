@@ -42,6 +42,9 @@ carpet:
     fragileVault:
       name: 脆弱宝库
       desc: 将宝库的爆炸抗性设置为与信标相同
+    globalSlimeChunk:
+      name: 全局史莱姆区块
+      desc: 将所有区块视为史莱姆区块
     helmetControlsPlayerDistance:
       name: 头盔控制加载距离
       desc: "命名为 #load<数字> 的皮革头盔，会将佩戴者的模拟距离和渲染距离设置为指定的数字"
