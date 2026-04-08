@@ -21,6 +21,7 @@ import java.util.List;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
@@ -28,6 +29,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -35,16 +37,20 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
 import cn.nm.lms.carpetlmsaddition.lib.check.CheckName;
 
-public abstract class DispenserBarterBaseBehavior extends DefaultDispenseItemBehavior
+final class DispenserBarteringExecutor
 {
     private static final ResourceKey<LootTable> PIGLIN_BARTER_TABLE = ResourceKey.create(
             Registries.LOOT_TABLE,
             Identifier.fromNamespaceAndPath("minecraft", "gameplay/piglin_bartering")
     );
 
-    protected final void spawnBarterDrops(BlockSource source, int rolls)
+    private DispenserBarteringExecutor()
     {
-        if (rolls <= 0)
+    }
+
+    static void dropBarterLoot(BlockSource source, int barterRollCount)
+    {
+        if (barterRollCount <= 0)
         {
             return;
         }
@@ -58,7 +64,7 @@ public abstract class DispenserBarterBaseBehavior extends DefaultDispenseItemBeh
 
         for (
                 int i = 0;
-                i < rolls;
+                i < barterRollCount;
                 i++
         )
         {
@@ -89,14 +95,14 @@ public abstract class DispenserBarterBaseBehavior extends DefaultDispenseItemBeh
         }
     }
 
-    protected final void spawnItemFromDispenser(BlockSource source, ItemStack stack)
+    static void dropEmptyShulkerBox(BlockSource source, ItemStack shulkerBox)
     {
-        Direction facing = source.state().getValue(DispenserBlock.FACING);
-        Position dispensePosition = DispenserBlock.getDispensePosition(source);
-        DefaultDispenseItemBehavior.spawnItem(source.level(), stack, 6, facing, dispensePosition);
+        ItemStack emptyShulkerBox = shulkerBox.copy();
+        emptyShulkerBox.set(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+        spawnItemFromDispenser(source, emptyShulkerBox);
     }
 
-    protected final boolean hasRequiredName(BlockSource source)
+    static boolean shouldBlockByDispenserName(BlockSource source)
     {
         String name = source.blockEntity().getName().getString();
         return !CheckName.checkName(
@@ -106,12 +112,16 @@ public abstract class DispenserBarterBaseBehavior extends DefaultDispenseItemBeh
         );
     }
 
+    private static void spawnItemFromDispenser(BlockSource source, ItemStack stack)
+    {
+        Direction facing = source.state().getValue(DispenserBlock.FACING);
+        Position dispensePosition = DispenserBlock.getDispensePosition(source);
+        DefaultDispenseItemBehavior.spawnItem(source.level(), stack, 6, facing, dispensePosition);
+    }
+
     private static void mergeDrop(List<AccumulatedDrop> accumulatedDrops, ItemStack drop)
     {
-        if (drop.isEmpty())
-        {
-            return;
-        }
+        if (drop.isEmpty()) return;
 
         for (
             AccumulatedDrop accumulatedDrop : accumulatedDrops

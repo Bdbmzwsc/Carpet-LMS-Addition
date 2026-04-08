@@ -16,6 +16,7 @@
  */
 package cn.nm.lms.carpetlmsaddition.rule.block.util.dispenserbartering;
 
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.ShulkerBoxDispenseBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -29,20 +30,20 @@ public class DispenserBarteringInit
     {
         DispenserBlock.registerBehavior(
                 Items.GOLD_INGOT,
-                new DispenserBarterBehavior(
-                        1,
-                        () -> DispenserBarteringRule.getDispenserBarteringLevel() >= 1
+                new DispenserBarteringBehavior(
+                        () -> DispenserBarteringRule.getDispenserBarteringLevel() >= 1,
+                        new DefaultDispenseItemBehavior()
                 )
         );
         DispenserBlock.registerBehavior(
                 Items.GOLD_BLOCK,
-                new DispenserBarterBehavior(
-                        9,
-                        () -> DispenserBarteringRule.getDispenserBarteringLevel() >= 2
+                new DispenserBarteringBehavior(
+                        () -> DispenserBarteringRule.getDispenserBarteringLevel() >= 2,
+                        new DefaultDispenseItemBehavior()
                 )
         );
 
-        DispenserBarterShulkerBehavior shulkerBehavior = new DispenserBarterShulkerBehavior(
+        DispenserBarteringBehavior shulkerBehavior = new DispenserBarteringBehavior(
                 () -> DispenserBarteringRule.getDispenserBarteringLevel() >= 3,
                 new ShulkerBoxDispenseBehavior()
         );

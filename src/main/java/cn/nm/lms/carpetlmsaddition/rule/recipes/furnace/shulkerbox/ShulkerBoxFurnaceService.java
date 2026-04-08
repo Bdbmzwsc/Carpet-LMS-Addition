@@ -36,6 +36,8 @@ import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import cn.nm.lms.carpetlmsaddition.lib.Utils;
+
 public final class ShulkerBoxFurnaceService
 {
     private static final int SLOT_INPUT = 0;
@@ -60,7 +62,7 @@ public final class ShulkerBoxFurnaceService
         }
 
         ItemStack input = entity.getItem(SLOT_INPUT);
-        if (!isShulkerBox(input))
+        if (!Utils.isShulkerBox(input))
         {
             return false;
         }
@@ -134,11 +136,6 @@ public final class ShulkerBoxFurnaceService
         }
 
         return true;
-    }
-
-    private static boolean isShulkerBox(ItemStack stack)
-    {
-        return stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof ShulkerBoxBlock;
     }
 
     private static ItemStack calculateShulkerBoxResult(
