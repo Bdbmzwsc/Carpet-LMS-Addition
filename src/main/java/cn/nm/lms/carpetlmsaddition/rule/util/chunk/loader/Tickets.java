@@ -21,12 +21,22 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.TicketType;
 
 public final class Tickets {
+    //#if MC>=12105
     public static TicketType register(final String name, final long timeout) {
+        //#else
+        //$$ public static TicketType<net.minecraft.world.level.ChunkPos> register(final String name, final long timeout) {
+        //#endif
+        //#if MC>=12105
         //#if MC>=12109
         TicketType ticketType = new TicketType(timeout, 15);
         //#else
-        //$$ TicketType ticketType = new TicketType(timeout, true,TicketType.TicketUse.LOADING_AND_SIMULATION);
+        //$$ TicketType ticketType = new TicketType(timeout, true, TicketType.TicketUse.LOADING_AND_SIMULATION);
         //#endif
         return Registry.register(BuiltInRegistries.TICKET_TYPE, name, ticketType);
+        //#else
+        //$$ return TicketType.create(name,
+        //$$     java.util.Comparator.comparingLong(net.minecraft.world.level.ChunkPos::toLong),
+        //$$     (int)timeout);
+        //#endif
     }
 }

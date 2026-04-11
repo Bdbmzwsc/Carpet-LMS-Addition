@@ -52,7 +52,7 @@ public final class LowHealthSpectator {
                 if (isInCooldown(now, last)) {
                     return;
                 }
-                if (player.gameMode() != GameType.SURVIVAL) {
+                if (player.gameMode.getGameModeForPlayer() != GameType.SURVIVAL) {
                     return;
                 }
 

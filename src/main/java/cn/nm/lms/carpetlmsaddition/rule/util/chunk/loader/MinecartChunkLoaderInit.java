@@ -22,14 +22,22 @@ public enum MinecartChunkLoaderInit {
     MINECART_1(1), MINECART_20(20), MINECART_300(300);
 
     private final int timeout;
+    //#if MC>=12105
     private final TicketType ticket;
+    //#else
+    //$$ private final TicketType<net.minecraft.world.level.ChunkPos> ticket;
+    //#endif
 
     MinecartChunkLoaderInit(int timeout) {
         this.timeout = timeout;
         this.ticket = Tickets.register(name().toLowerCase(), timeout);
     }
 
+    //#if MC>=12105
     public static TicketType getTicket(long timeout) {
+        //#else
+        //$$ public static TicketType<net.minecraft.world.level.ChunkPos> getTicket(long timeout) {
+        //#endif
         for (MinecartChunkLoaderInit value : values()) {
             if (value.timeout == timeout) {
                 return value.ticket;

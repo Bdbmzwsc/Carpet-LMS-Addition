@@ -41,7 +41,11 @@ public abstract class MinecartChunkLoaderMixin {
         if (timeout <= 0) {
             return;
         }
+        //#if MC>=12105
         TicketType MINECART = MinecartChunkLoaderInit.getTicket(timeout);
+        //#else
+        //$$ TicketType<ChunkPos> MINECART = MinecartChunkLoaderInit.getTicket(timeout);
+        //#endif
         MinecartFurnace minecart = (MinecartFurnace)(Object)this;
         if (!(minecart.level() instanceof ServerLevel serverLevel)) {
             return;
@@ -49,13 +53,17 @@ public abstract class MinecartChunkLoaderMixin {
         if (this.fuel <= 0) {
             return;
         }
+        ChunkPos chunkPos;
+        //#if MC>=260100
+        chunkPos = ChunkPos.containing(minecart.blockPosition());
+        //#else
+        //$$ chunkPos = new ChunkPos(minecart.blockPosition());
+        //#endif
 
-        serverLevel.getChunkSource().addTicketWithRadius(MINECART,
-            //#if MC>=260100
-            ChunkPos.containing(minecart.blockPosition()),
-            //#else
-            //$$ new ChunkPos(minecart.blockPosition()),
-            //#endif
-            3);
+        //#if MC>=12105
+        serverLevel.getChunkSource().addTicketWithRadius(MINECART, chunkPos, 3);
+        //#else
+        //$$ serverLevel.getChunkSource().addRegionTicket(MINECART, chunkPos, 3, chunkPos);
+        //#endif
     }
 }

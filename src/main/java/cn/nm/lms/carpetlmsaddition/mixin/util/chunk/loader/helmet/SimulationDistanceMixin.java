@@ -27,7 +27,6 @@ import net.minecraft.server.level.FullChunkStatus;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.Ticket;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.TicketStorage;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -45,58 +44,91 @@ public abstract class SimulationDistanceMixin {
     @Shadow
     private int simulationDistance;
 
+    //#if MC>=12105
     @Redirect(method = "addPlayer(Lnet/minecraft/core/SectionPos;Lnet/minecraft/server/level/ServerPlayer;)V", at = @At(
         value = "INVOKE",
         target = "Lnet/minecraft/world/level/TicketStorage;addTicket(Lnet/minecraft/server/level/Ticket;Lnet/minecraft/world/level/ChunkPos;)V"))
-    private void applyHelmetSimulationDistanceOnAdd$LMS(TicketStorage ticketStorage, Ticket ticket, ChunkPos chunkPos,
-        SectionPos sectionPos, ServerPlayer serverPlayer) {
-        Ticket adjustedTicket = this.createSimulationTicket$LMS(ticket, serverPlayer);
-        lastSimTicketLevel.put(serverPlayer.getUUID(), adjustedTicket.getTicketLevel());
-        ticketStorage.addTicket(adjustedTicket, chunkPos);
+    private void applyHelmetSimulationDistanceOnAdd$LMS(net.minecraft.world.level.TicketStorage ticketStorage,
+        Ticket ticket, ChunkPos chunkPos, SectionPos sectionPos, ServerPlayer serverPlayer) {
+        int adjustedLevel = this.createSimulationTicketLevel$LMS(ticket.getTicketLevel(), serverPlayer);
+        lastSimTicketLevel.put(serverPlayer.getUUID(), adjustedLevel);
+        if (adjustedLevel == ticket.getTicketLevel()) {
+            ticketStorage.addTicket(ticket, chunkPos);
+            return;
+        }
+        ticketStorage.addTicket(new Ticket(ticket.getType(), adjustedLevel), chunkPos);
     }
+    //#else
+    //$$ @Redirect(method = "addPlayer(Lnet/minecraft/core/SectionPos;Lnet/minecraft/server/level/ServerPlayer;)V", at = @At(
+    //$$     value = "INVOKE",
+    //$$     target = "Lnet/minecraft/server/level/TickingTracker;addTicket(Lnet/minecraft/server/level/TicketType;Lnet/minecraft/world/level/ChunkPos;ILjava/lang/Object;)V"))
+    //$$ @SuppressWarnings({ "rawtypes", "unchecked" })
+    //$$ private void applyHelmetSimulationDistanceOnAdd$LMS(net.minecraft.server.level.TickingTracker tickingTracker,
+    //$$     net.minecraft.server.level.TicketType ticketType, ChunkPos chunkPos, int ticketLevel, Object key,
+    //$$     SectionPos sectionPos, ServerPlayer serverPlayer) {
+    //$$     int adjustedLevel = this.createSimulationTicketLevel$LMS(ticketLevel, serverPlayer);
+    //$$     lastSimTicketLevel.put(serverPlayer.getUUID(), adjustedLevel);
+    //$$     tickingTracker.addTicket(ticketType, chunkPos, adjustedLevel, key);
+    //$$ }
+    //#endif
 
+    //#if MC>=12105
     @Redirect(method = "removePlayer(Lnet/minecraft/core/SectionPos;Lnet/minecraft/server/level/ServerPlayer;)V",
         at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/level/TicketStorage;removeTicket(Lnet/minecraft/server/level/Ticket;Lnet/minecraft/world/level/ChunkPos;)V"))
-    private void applyHelmetSimulationDistanceOnRemove$LMS(TicketStorage ticketStorage, Ticket ticket,
-        ChunkPos chunkPos, SectionPos sectionPos, ServerPlayer serverPlayer) {
-        Ticket adjustedTicket = this.createSimulationTicket$LMS(ticket, serverPlayer);
+    private void applyHelmetSimulationDistanceOnRemove$LMS(net.minecraft.world.level.TicketStorage ticketStorage,
+        Ticket ticket, ChunkPos chunkPos, SectionPos sectionPos, ServerPlayer serverPlayer) {
+        int adjustedLevel = this.createSimulationTicketLevel$LMS(ticket.getTicketLevel(), serverPlayer);
         long chunkKey$LMS = this.chunkKey$LMS(chunkPos);
+        Integer storedLevel = lastSimTicketLevel.remove(serverPlayer.getUUID());
 
-        Integer storedLevel = lastSimTicketLevel.get(serverPlayer.getUUID());
-
-        if (storedLevel != null) {
+        if (storedLevel != null && storedLevel != ticket.getTicketLevel()) {
             Ticket storedTicket = new Ticket(ticket.getType(), storedLevel);
             if (ticketStorage.removeTicket(chunkKey$LMS, storedTicket)) {
-                lastSimTicketLevel.remove(serverPlayer.getUUID());
                 return;
             }
         }
 
-        if (ticketStorage.removeTicket(chunkKey$LMS, adjustedTicket)) {
-            lastSimTicketLevel.remove(serverPlayer.getUUID());
-            return;
+        if (adjustedLevel != ticket.getTicketLevel()) {
+            Ticket adjustedTicket = new Ticket(ticket.getType(), adjustedLevel);
+            if (ticketStorage.removeTicket(chunkKey$LMS, adjustedTicket)) {
+                return;
+            }
         }
 
-        if (adjustedTicket != ticket) {
-            ticketStorage.removeTicket(chunkKey$LMS, ticket);
-        }
+        ticketStorage.removeTicket(chunkKey$LMS, ticket);
     }
+    //#else
+    //$$ @Redirect(method = "removePlayer(Lnet/minecraft/core/SectionPos;Lnet/minecraft/server/level/ServerPlayer;)V",
+    //$$     at = @At(value = "INVOKE",
+    //$$         target = "Lnet/minecraft/server/level/TickingTracker;removeTicket(Lnet/minecraft/server/level/TicketType;Lnet/minecraft/world/level/ChunkPos;ILjava/lang/Object;)V"))
+    //$$ @SuppressWarnings({ "rawtypes", "unchecked" })
+    //$$ private void applyHelmetSimulationDistanceOnRemove$LMS(net.minecraft.server.level.TickingTracker tickingTracker,
+    //$$     net.minecraft.server.level.TicketType ticketType, ChunkPos chunkPos, int ticketLevel, Object key,
+    //$$     SectionPos sectionPos, ServerPlayer serverPlayer) {
+    //$$     Integer storedLevel = lastSimTicketLevel.remove(serverPlayer.getUUID());
+    //$$     int adjustedLevel = this.createSimulationTicketLevel$LMS(ticketLevel, serverPlayer);
+    //$$
+    //$$     if (storedLevel != null && storedLevel != ticketLevel) {
+    //$$         tickingTracker.removeTicket(ticketType, chunkPos, storedLevel, key);
+    //$$     }
+    //$$     if (adjustedLevel != ticketLevel) {
+    //$$         tickingTracker.removeTicket(ticketType, chunkPos, adjustedLevel, key);
+    //$$     }
+    //$$
+    //$$     tickingTracker.removeTicket(ticketType, chunkPos, ticketLevel, key);
+    //$$ }
+    //#endif
 
     @Unique
-    private Ticket createSimulationTicket$LMS(Ticket originalTicket, ServerPlayer player) {
+    private int createSimulationTicketLevel$LMS(int originalLevel, ServerPlayer player) {
         int helmetDistance = HelmetLoadValue.helmetLoadValue(player);
         if (helmetDistance <= 0) {
-            return originalTicket;
+            return originalLevel;
         }
 
         int cappedDistance = Math.min(helmetDistance, this.simulationDistance);
-        int level = Math.max(0, ChunkLevel.byStatus(FullChunkStatus.ENTITY_TICKING) - cappedDistance);
-        if (level == originalTicket.getTicketLevel()) {
-            return originalTicket;
-        }
-
-        return new Ticket(originalTicket.getType(), level);
+        return Math.max(0, ChunkLevel.byStatus(FullChunkStatus.ENTITY_TICKING) - cappedDistance);
     }
 
     @Unique
