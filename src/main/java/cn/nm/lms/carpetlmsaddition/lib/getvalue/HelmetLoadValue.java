@@ -24,32 +24,35 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-import cn.nm.lms.carpetlmsaddition.rule.util.chunkloader.helmetcontrolsplayerdistance.HelmetControlsPlayerDistanceRule;
+import cn.nm.lms.carpetlmsaddition.rule.Settings;
 
-public final class HelmetLoadValue
-{
+public final class HelmetLoadValue {
     private static final Pattern HELMET_PATTERN = Pattern.compile("^#load(\\d+)$");
 
-    public static int helmetLoadValue(ServerPlayer player)
-    {
-        if (!HelmetControlsPlayerDistanceRule.helmetControlsPlayerDistance) return 0;
-        if (player.isSpectator()) return 0;
+    public static int helmetLoadValue(ServerPlayer player) {
+        if (!Settings.helmetControlsPlayerDistance) {
+            return 0;
+        }
+        if (player.isSpectator()) {
+            return 0;
+        }
 
         ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
-        if (helmet.isEmpty() || helmet.getItem() != Items.LEATHER_HELMET) return 0;
+        if (helmet.isEmpty() || helmet.getItem() != Items.LEATHER_HELMET) {
+            return 0;
+        }
 
         String raw = helmet.getHoverName().getString();
         String compact = raw.replaceAll("\\s+", "");
         Matcher m = HELMET_PATTERN.matcher(compact);
-        if (!m.matches()) return 0;
+        if (!m.matches()) {
+            return 0;
+        }
 
         int v;
-        try
-        {
+        try {
             v = Integer.parseInt(m.group(1));
-        }
-        catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             return 0;
         }
 

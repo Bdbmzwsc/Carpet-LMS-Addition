@@ -28,31 +28,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import cn.nm.lms.carpetlmsaddition.rule.block.breaking.SoftVaultRule;
+import cn.nm.lms.carpetlmsaddition.rule.Settings;
 
-@Mixin(
-    BlockStateBase.class
-)
-public abstract class SoftVaultMixin
-{
+@Mixin(BlockStateBase.class)
+public abstract class SoftVaultMixin {
     @Shadow
     public abstract Block getBlock();
 
-    @Inject(
-            method = "getDestroySpeed",
-            at = @At(
-                "RETURN"
-            ),
-            cancellable = true
-    )
-    private void vaultHardnessTo3$LMS(
-            BlockGetter world,
-            BlockPos pos,
-            CallbackInfoReturnable<Float> cir
-    )
-    {
-        if (SoftVaultRule.softVault && this.getBlock() == Blocks.VAULT)
-        {
+    @Inject(method = "getDestroySpeed", at = @At("RETURN"), cancellable = true)
+    private void vaultHardnessTo3$LMS(BlockGetter world, BlockPos pos, CallbackInfoReturnable<Float> cir) {
+        if (Settings.softVault && this.getBlock() == Blocks.VAULT) {
             cir.setReturnValue(3.0F);
         }
     }

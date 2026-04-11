@@ -20,10 +20,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 
-public class Utils
-{
-    public static boolean isShulkerBox(ItemStack stack)
-    {
+public class Utils {
+    public static boolean isShulkerBox(ItemStack stack) {
         return stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof ShulkerBoxBlock;
     }
 }

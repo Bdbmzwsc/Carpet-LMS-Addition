@@ -16,7 +16,6 @@
  */
 package cn.nm.lms.carpetlmsaddition.rule;
 
-public final class LMSRuleCategory
-{
+public final class LMSRuleCategory {
     public static final String LMS = "LMS";
 }

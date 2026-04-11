@@ -26,30 +26,24 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 
-import cn.nm.lms.carpetlmsaddition.rule.entity.projectile.PearlIgnoreEntityCollisionRule;
+import cn.nm.lms.carpetlmsaddition.rule.Settings;
 
-@Mixin(
-    Projectile.class
-)
-public abstract class PearlIgnoreEntityCollisionMixin
-{
-    @WrapWithCondition(
-            method = "hitTargetOrDeflectSelf",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/projectile/Projectile;onHit" + "(Lnet/minecraft/world/phys/HitResult;)V"
-            )
-    )
-    private boolean skipCollisionIfEntityHit$LMS(Projectile self, HitResult hitResult)
-    {
+@Mixin(Projectile.class)
+public abstract class PearlIgnoreEntityCollisionMixin {
+    @WrapWithCondition(method = "hitTargetOrDeflectSelf", at = @At(value = "INVOKE",
+        target = "Lnet/minecraft/world/entity/projectile/Projectile;onHit" + "(Lnet/minecraft/world/phys/HitResult;)V"))
+    private boolean skipCollisionIfEntityHit$LMS(Projectile self, HitResult hitResult) {
         return !shouldSkip(self, hitResult);
     }
 
     @Unique
-    private boolean shouldSkip(Projectile self, HitResult hitResult)
-    {
-        if (!PearlIgnoreEntityCollisionRule.pearlIgnoreEntityCollision) return false;
-        if (!(self instanceof ThrownEnderpearl)) return false;
+    private boolean shouldSkip(Projectile self, HitResult hitResult) {
+        if (!Settings.pearlIgnoreEntityCollision) {
+            return false;
+        }
+        if (!(self instanceof ThrownEnderpearl)) {
+            return false;
+        }
         return hitResult.getType() == HitResult.Type.ENTITY;
     }
 }

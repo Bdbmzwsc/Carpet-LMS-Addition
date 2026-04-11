@@ -27,57 +27,39 @@ import carpet.fakes.ServerPlayerInterface;
 import carpet.helpers.EntityPlayerActionPack;
 import carpet.utils.CommandHelper;
 
-import cn.nm.lms.carpetlmsaddition.rule.util.command.playercommanddropall.DropallActionExtension;
-import cn.nm.lms.carpetlmsaddition.rule.util.command.playercommanddropall.PlayerCommandDropallRule;
+import cn.nm.lms.carpetlmsaddition.rule.Settings;
+import cn.nm.lms.carpetlmsaddition.rule.util.command.DropallActionExtension;
 
-@Mixin(
-    EntityPlayerActionPack.Action.class
-)
-public class EntityPlayerActionPackActionMixin implements DropallActionExtension
-{
+@Mixin(EntityPlayerActionPack.Action.class)
+public class EntityPlayerActionPackActionMixin implements DropallActionExtension {
     @Unique
     private boolean lms$dropall;
 
     @Override
     @Unique
-    public void setDropall$LMS(boolean v)
-    {
+    public void setDropall$LMS(boolean v) {
         this.lms$dropall = v;
     }
 
     @Override
     @Unique
-    public boolean isDropall$LMS()
-    {
+    public boolean isDropall$LMS() {
         return this.lms$dropall;
     }
 
-    @WrapOperation(
-            method = "tick",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lcarpet/helpers/EntityPlayerActionPack$ActionType;execute" + "(Lnet/minecraft/server/level/ServerPlayer;" + "Lcarpet/helpers/EntityPlayerActionPack$Action;)Z"
-            ),
-            remap = false
-    )
-    private boolean wrapExecute$LMS(
-            EntityPlayerActionPack.ActionType type,
-            net.minecraft.server.level.ServerPlayer player,
-            EntityPlayerActionPack.Action action,
-            Operation<Boolean> original,
-            EntityPlayerActionPack pack
-    )
-    {
-        if (type == EntityPlayerActionPack.ActionType.DROP_STACK && isDropall$LMS())
-        {
-            if (!CommandHelper.canUseCommand(
-                    player.createCommandSourceStack(),
-                    PlayerCommandDropallRule.playerCommandDropall
-            ))
-            {
+    @WrapOperation(method = "tick",
+        at = @At(value = "INVOKE",
+            target = "Lcarpet/helpers/EntityPlayerActionPack$ActionType;execute"
+                + "(Lnet/minecraft/server/level/ServerPlayer;" + "Lcarpet/helpers/EntityPlayerActionPack$Action;)Z"),
+        remap = false)
+    private boolean wrapExecute$LMS(EntityPlayerActionPack.ActionType type,
+        net.minecraft.server.level.ServerPlayer player, EntityPlayerActionPack.Action action,
+        Operation<Boolean> original, EntityPlayerActionPack pack) {
+        if (type == EntityPlayerActionPack.ActionType.DROP_STACK && isDropall$LMS()) {
+            if (!CommandHelper.canUseCommand(player.createCommandSourceStack(), Settings.playerCommandDropall)) {
                 return false;
             }
-            EntityPlayerActionPack actionPack = ((ServerPlayerInterface) player).getActionPack();
+            EntityPlayerActionPack actionPack = ((ServerPlayerInterface)player).getActionPack();
             actionPack.drop(-2, true);
             return false;
         }

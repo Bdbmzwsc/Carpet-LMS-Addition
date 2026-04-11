@@ -40,119 +40,63 @@ import carpet.commands.PlayerCommand;
 import carpet.helpers.EntityPlayerActionPack;
 import carpet.utils.CommandHelper;
 
-import cn.nm.lms.carpetlmsaddition.rule.util.command.playercommanddropall.DropallActionExtension;
-import cn.nm.lms.carpetlmsaddition.rule.util.command.playercommanddropall.PlayerCommandDropallRule;
+import cn.nm.lms.carpetlmsaddition.rule.Settings;
+import cn.nm.lms.carpetlmsaddition.rule.util.command.DropallActionExtension;
 
-@Mixin(
-        value = PlayerCommand.class,
-        remap = false
-)
-public abstract class PlayerCommandDropallMixin
-{
-    @Inject(
-            method = "register",
-            at = @At(
-                "TAIL"
-            )
-    )
-    private static void registerDropall$LMS(
-            CommandDispatcher<CommandSourceStack> dispatcher,
-            CommandBuildContext ctx,
-            CallbackInfo ci
-    )
-    {
+@Mixin(value = PlayerCommand.class, remap = false)
+public abstract class PlayerCommandDropallMixin {
+    @Inject(method = "register", at = @At("TAIL"))
+    private static void registerDropall$LMS(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext ctx,
+        CallbackInfo ci) {
         CommandNode<CommandSourceStack> rootRaw = dispatcher.getRoot().getChild("player");
-        if (!(rootRaw instanceof LiteralCommandNode<CommandSourceStack> root)) return;
-        CommandNode<CommandSourceStack> playerArg = root.getChild("player");
-        if (playerArg == null)
-        {
+        if (!(rootRaw instanceof LiteralCommandNode<CommandSourceStack> root)) {
             return;
         }
-        if (playerArg.getChild("dropall") == null)
-        {
+        CommandNode<CommandSourceStack> playerArg = root.getChild("player");
+        if (playerArg == null) {
+            return;
+        }
+        if (playerArg.getChild("dropall") == null) {
             playerArg.addChild(buildDropallCommand$LMS().build());
         }
     }
 
-    @Invoker(
-            value = "manipulate",
-            remap = false
-    )
-    private static int invokeManipulate$LMS(
-            CommandContext<CommandSourceStack> context,
-            Consumer<EntityPlayerActionPack> op
-    )
-    {
+    @Invoker(value = "manipulate", remap = false)
+    private static int invokeManipulate$LMS(CommandContext<CommandSourceStack> context,
+        Consumer<EntityPlayerActionPack> op) {
         throw new AssertionError();
     }
 
     @Unique
-    private static LiteralArgumentBuilder<CommandSourceStack> buildDropallCommand$LMS()
-    {
+    private static LiteralArgumentBuilder<CommandSourceStack> buildDropallCommand$LMS() {
         return Commands.literal("dropall")
-                       .requires(
-                               src -> CommandHelper.canUseCommand(
-                                       src,
-                                       PlayerCommandDropallRule.playerCommandDropall
-                               )
-                       )
-                       .executes(PlayerCommandDropallMixin::executeDropallOnce$LMS)
-                       .then(
-                               Commands.literal("once")
-                                       .executes(PlayerCommandDropallMixin::executeDropallOnce$LMS)
-                       )
-                       .then(
-                               Commands.literal("continuous")
-                                       .executes(
-                                               PlayerCommandDropallMixin::executeDropallContinuous$LMS
-                                       )
-                       )
-                       .then(
-                               Commands.literal("interval")
-                                       .then(
-                                               Commands.argument(
-                                                       "ticks",
-                                                       IntegerArgumentType.integer(1)
-                                               )
-                                                       .executes(
-                                                               PlayerCommandDropallMixin::executeDropallInterval$LMS
-                                                       )
-                                       )
-                       );
+            .requires(src -> CommandHelper.canUseCommand(src, Settings.playerCommandDropall))
+            .executes(PlayerCommandDropallMixin::executeDropallOnce$LMS)
+            .then(Commands.literal("once").executes(PlayerCommandDropallMixin::executeDropallOnce$LMS))
+            .then(Commands.literal("continuous").executes(PlayerCommandDropallMixin::executeDropallContinuous$LMS))
+            .then(Commands.literal("interval").then(Commands.argument("ticks", IntegerArgumentType.integer(1))
+                .executes(PlayerCommandDropallMixin::executeDropallInterval$LMS)));
     }
 
     @Unique
-    private static void markAndStart$LMS(
-            EntityPlayerActionPack pack,
-            EntityPlayerActionPack.Action action
-    )
-    {
-        ((DropallActionExtension) action).setDropall$LMS(true);
+    private static void markAndStart$LMS(EntityPlayerActionPack pack, EntityPlayerActionPack.Action action) {
+        ((DropallActionExtension)action).setDropall$LMS(true);
         pack.start(EntityPlayerActionPack.ActionType.DROP_STACK, action);
     }
 
     @Unique
-    private static int executeDropallOnce$LMS(CommandContext<CommandSourceStack> ctx)
-    {
+    private static int executeDropallOnce$LMS(CommandContext<CommandSourceStack> ctx) {
         return invokeManipulate$LMS(ctx, pack -> pack.drop(-2, true));
     }
 
     @Unique
-    private static int executeDropallContinuous$LMS(CommandContext<CommandSourceStack> ctx)
-    {
-        return invokeManipulate$LMS(
-                ctx,
-                pack -> markAndStart$LMS(pack, EntityPlayerActionPack.Action.continuous())
-        );
+    private static int executeDropallContinuous$LMS(CommandContext<CommandSourceStack> ctx) {
+        return invokeManipulate$LMS(ctx, pack -> markAndStart$LMS(pack, EntityPlayerActionPack.Action.continuous()));
     }
 
     @Unique
-    private static int executeDropallInterval$LMS(CommandContext<CommandSourceStack> ctx)
-    {
+    private static int executeDropallInterval$LMS(CommandContext<CommandSourceStack> ctx) {
         int t = IntegerArgumentType.getInteger(ctx, "ticks");
-        return invokeManipulate$LMS(
-                ctx,
-                pack -> markAndStart$LMS(pack, EntityPlayerActionPack.Action.interval(t))
-        );
+        return invokeManipulate$LMS(ctx, pack -> markAndStart$LMS(pack, EntityPlayerActionPack.Action.interval(t)));
     }
 }

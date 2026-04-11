@@ -31,33 +31,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import cn.nm.lms.carpetlmsaddition.rule.block.breaking.ExplosionProofBuddingAmethystRule;
+import cn.nm.lms.carpetlmsaddition.rule.Settings;
 
-@Mixin(
-    ExplosionDamageCalculator.class
-)
-public abstract class ExplosionProofBuddingAmethystMixin
-{
-    @Inject(
-            method = "getBlockExplosionResistance",
-            at = @At(
-                "HEAD"
-            ),
-            cancellable = true
-    )
-    private void vaultBlastResistanceTo3$LMS(
-            Explosion explosion,
-            BlockGetter world,
-            BlockPos pos,
-            BlockState blockState,
-            FluidState fluidState,
-            CallbackInfoReturnable<Optional<Float>> cir
-    )
-    {
-        if (ExplosionProofBuddingAmethystRule.explosionProofBuddingAmethyst && blockState.is(
-                Blocks.BUDDING_AMETHYST
-        ))
-        {
+@Mixin(ExplosionDamageCalculator.class)
+public abstract class ExplosionProofBuddingAmethystMixin {
+    @Inject(method = "getBlockExplosionResistance", at = @At("HEAD"), cancellable = true)
+    private void vaultBlastResistanceTo3$LMS(Explosion explosion, BlockGetter world, BlockPos pos,
+        BlockState blockState, FluidState fluidState, CallbackInfoReturnable<Optional<Float>> cir) {
+        if (Settings.explosionProofBuddingAmethyst && blockState.is(Blocks.BUDDING_AMETHYST)) {
             cir.setReturnValue(Optional.of(3_600_000.0F));
         }
     }

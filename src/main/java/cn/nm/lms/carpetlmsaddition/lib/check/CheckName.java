@@ -16,11 +16,11 @@
  */
 package cn.nm.lms.carpetlmsaddition.lib.check;
 
-public class CheckName
-{
-    public static boolean checkName(String input, String setting, String defaultName)
-    {
-        if ("false".equalsIgnoreCase(setting)) return false;
+public class CheckName {
+    public static boolean checkName(String input, String setting, String defaultName) {
+        if ("false".equalsIgnoreCase(setting)) {
+            return false;
+        }
         String expectName = "true".equalsIgnoreCase(setting) ? defaultName : setting;
         return expectName.equalsIgnoreCase(input);
     }

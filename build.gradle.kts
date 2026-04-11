@@ -85,21 +85,7 @@ spotless {
         removeUnusedImports()
         forbidWildcardImports()
         forbidModuleImports()
-        importOrder(
-            "java",
-            "javax",
-            "net.minecraft",
-            "com.mojang",
-            "net.fabricmc",
-            "org.spongepowered",
-            "com.llamalad7",
-            "carpet",
-            "org",
-            "com",
-            "net",
-            "cn.nm.lms",
-            "",
-        )
+        importOrderFile(rootProject.file("eclipse-importorder.txt"))
         cleanthat()
         val eclipseRelease = libs.versions.eclipse.get()
         val eclipseVersion = eclipseRelease.removePrefix("R-").substringBeforeLast("-")
@@ -166,6 +152,7 @@ spotless {
             "copyright.txt",
             "mappings/*.txt",
             "website/public/_headers",
+            "eclipse-importorder.txt",
         )
         trimTrailingWhitespace()
         endWithNewline()

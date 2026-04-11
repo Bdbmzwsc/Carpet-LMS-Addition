@@ -31,31 +31,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import cn.nm.lms.carpetlmsaddition.rule.block.breaking.FragileTrialSpawnerRule;
+import cn.nm.lms.carpetlmsaddition.rule.Settings;
 
-@Mixin(
-    ExplosionDamageCalculator.class
-)
-public abstract class FragileTrialSpawnerMixin
-{
-    @Inject(
-            method = "getBlockExplosionResistance",
-            at = @At(
-                "HEAD"
-            ),
-            cancellable = true
-    )
-    private void trialSpawnerBlastResistanceTo3$LMS(
-            Explosion explosion,
-            BlockGetter world,
-            BlockPos pos,
-            BlockState blockState,
-            FluidState fluidState,
-            CallbackInfoReturnable<Optional<Float>> cir
-    )
-    {
-        if (FragileTrialSpawnerRule.fragileTrialSpawner && blockState.is(Blocks.TRIAL_SPAWNER))
-        {
+@Mixin(ExplosionDamageCalculator.class)
+public abstract class FragileTrialSpawnerMixin {
+    @Inject(method = "getBlockExplosionResistance", at = @At("HEAD"), cancellable = true)
+    private void trialSpawnerBlastResistanceTo3$LMS(Explosion explosion, BlockGetter world, BlockPos pos,
+        BlockState blockState, FluidState fluidState, CallbackInfoReturnable<Optional<Float>> cir) {
+        if (Settings.fragileTrialSpawner && blockState.is(Blocks.TRIAL_SPAWNER)) {
             cir.setReturnValue(Optional.of(3.0F));
         }
     }

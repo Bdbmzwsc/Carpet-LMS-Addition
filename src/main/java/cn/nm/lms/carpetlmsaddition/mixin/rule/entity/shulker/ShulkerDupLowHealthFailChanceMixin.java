@@ -22,23 +22,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-import cn.nm.lms.carpetlmsaddition.rule.entity.shulker.ShulkerDupLowHealthFailChanceRule;
+import cn.nm.lms.carpetlmsaddition.rule.Settings;
 
-@Mixin(
-    Shulker.class
-)
-public abstract class ShulkerDupLowHealthFailChanceMixin
-{
-    @ModifyConstant(
-            method = "hurtServer",
-            constant = @Constant(
-                    intValue = 4,
-                    ordinal = 0
-            )
-    )
-    private int changeBlacklistLimit$LMS(int _unusedOriginal)
-    {
-        int chance = ShulkerDupLowHealthFailChanceRule.shulkerDupLowHealthFailChance;
+@Mixin(Shulker.class)
+public abstract class ShulkerDupLowHealthFailChanceMixin {
+    @ModifyConstant(method = "hurtServer", constant = @Constant(intValue = 4, ordinal = 0))
+    private int changeBlacklistLimit$LMS(int _unusedOriginal) {
+        int chance = Settings.shulkerDupLowHealthFailChance;
         return chance == 0 ? Integer.MAX_VALUE : chance;
     }
 }

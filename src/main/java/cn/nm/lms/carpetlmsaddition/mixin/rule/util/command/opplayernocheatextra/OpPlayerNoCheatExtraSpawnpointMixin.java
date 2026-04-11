@@ -30,29 +30,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
-import cn.nm.lms.carpetlmsaddition.rule.util.command.opplayernocheatextra.OpPlayerNoCheatExtra;
+import cn.nm.lms.carpetlmsaddition.rule.util.command.OpPlayerNoCheatExtra;
 
-@Mixin(
-    SetSpawnCommand.class
-)
-public abstract class OpPlayerNoCheatExtraSpawnpointMixin
-{
-    @WrapOperation(
-            method = "register",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;requires" + "(Ljava/util/function/Predicate;)" + "Lcom/mojang/brigadier/builder/ArgumentBuilder;",
-                    remap = false
-            ),
-            require = 1,
-            allow = 1
-    )
+@Mixin(SetSpawnCommand.class)
+public abstract class OpPlayerNoCheatExtraSpawnpointMixin {
+    @WrapOperation(method = "register",
+        at = @At(value = "INVOKE",
+            target = "Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;requires"
+                + "(Ljava/util/function/Predicate;)" + "Lcom/mojang/brigadier/builder/ArgumentBuilder;",
+            remap = false),
+        require = 1, allow = 1)
     private static ArgumentBuilder<CommandSourceStack, ?> wrapRequires$LMS(
-            LiteralArgumentBuilder<CommandSourceStack> instance,
-            Predicate<CommandSourceStack> predicate,
-            Operation<ArgumentBuilder<CommandSourceStack, ?>> original
-    )
-    {
+        LiteralArgumentBuilder<CommandSourceStack> instance, Predicate<CommandSourceStack> predicate,
+        Operation<ArgumentBuilder<CommandSourceStack, ?>> original) {
         return original.call(instance, OpPlayerNoCheatExtra.wrapPredicate(predicate));
     }
 }

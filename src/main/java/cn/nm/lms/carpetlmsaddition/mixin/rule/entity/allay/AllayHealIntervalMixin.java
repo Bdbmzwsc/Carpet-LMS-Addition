@@ -22,23 +22,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-import cn.nm.lms.carpetlmsaddition.rule.entity.allay.AllayHealIntervalRule;
+import cn.nm.lms.carpetlmsaddition.rule.Settings;
 
-@Mixin(
-    Allay.class
-)
-public abstract class AllayHealIntervalMixin
-{
-    @ModifyConstant(
-            method = "aiStep",
-            constant = @Constant(
-                    intValue = 10,
-                    ordinal = 0
-            )
-    )
-    private int changeAllayHealInterval$LMS(int _unusedOriginal)
-    {
-        int interval = AllayHealIntervalRule.allayHealInterval;
+@Mixin(Allay.class)
+public abstract class AllayHealIntervalMixin {
+    @ModifyConstant(method = "aiStep", constant = @Constant(intValue = 10, ordinal = 0))
+    private int changeAllayHealInterval$LMS(int _unusedOriginal) {
+        int interval = Settings.allayHealInterval;
         return interval == 0 ? Integer.MAX_VALUE : interval;
     }
 }

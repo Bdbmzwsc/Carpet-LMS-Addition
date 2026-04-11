@@ -24,29 +24,14 @@ import org.spongepowered.asm.mixin.injection.Slice;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 
-import cn.nm.lms.carpetlmsaddition.rule.entity.slime.GlobalSlimeChunkRule;
+import cn.nm.lms.carpetlmsaddition.rule.Settings;
 
-@Mixin(
-    Slime.class
-)
-public abstract class GlobalSlimeChunkMixin
-{
-    @ModifyExpressionValue(
-            method = "checkSlimeSpawnRules",
-            slice = @Slice(
-                    from = @At(
-                            value = "CONSTANT",
-                            args = "longValue=987234911"
-                    )
-            ),
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/util/RandomSource;nextInt(I)I",
-                    ordinal = 0
-            )
-    )
-    private static int forceSlimeChunk$lms(int original)
-    {
-        return GlobalSlimeChunkRule.globalSlimeChunk ? 0 : original;
+@Mixin(Slime.class)
+public abstract class GlobalSlimeChunkMixin {
+    @ModifyExpressionValue(method = "checkSlimeSpawnRules",
+        slice = @Slice(from = @At(value = "CONSTANT", args = "longValue=987234911")),
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/util/RandomSource;nextInt(I)I", ordinal = 0))
+    private static int forceSlimeChunk$lms(int original) {
+        return Settings.globalSlimeChunk ? 0 : original;
     }
 }

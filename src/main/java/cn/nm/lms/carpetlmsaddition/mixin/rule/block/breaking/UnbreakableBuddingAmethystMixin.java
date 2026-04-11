@@ -28,31 +28,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import cn.nm.lms.carpetlmsaddition.rule.block.breaking.UnbreakableBuddingAmethystRule;
+import cn.nm.lms.carpetlmsaddition.rule.Settings;
 
-@Mixin(
-    BlockStateBase.class
-)
-public abstract class UnbreakableBuddingAmethystMixin
-{
+@Mixin(BlockStateBase.class)
+public abstract class UnbreakableBuddingAmethystMixin {
     @Shadow
     public abstract Block getBlock();
 
-    @Inject(
-            method = "getDestroySpeed",
-            at = @At(
-                "RETURN"
-            ),
-            cancellable = true
-    )
-    private void amethystHardnessToNegative$LMS(
-            BlockGetter world,
-            BlockPos pos,
-            CallbackInfoReturnable<Float> cir
-    )
-    {
-        if (UnbreakableBuddingAmethystRule.unbreakableBuddingAmethyst && this.getBlock() == Blocks.BUDDING_AMETHYST)
-        {
+    @Inject(method = "getDestroySpeed", at = @At("RETURN"), cancellable = true)
+    private void amethystHardnessToNegative$LMS(BlockGetter world, BlockPos pos, CallbackInfoReturnable<Float> cir) {
+        if (Settings.unbreakableBuddingAmethyst && this.getBlock() == Blocks.BUDDING_AMETHYST) {
             cir.setReturnValue(-1.0F);
         }
     }

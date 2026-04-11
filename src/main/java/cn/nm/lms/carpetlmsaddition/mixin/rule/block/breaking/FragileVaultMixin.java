@@ -31,31 +31,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import cn.nm.lms.carpetlmsaddition.rule.block.breaking.FragileVaultRule;
+import cn.nm.lms.carpetlmsaddition.rule.Settings;
 
-@Mixin(
-    ExplosionDamageCalculator.class
-)
-public abstract class FragileVaultMixin
-{
-    @Inject(
-            method = "getBlockExplosionResistance",
-            at = @At(
-                "HEAD"
-            ),
-            cancellable = true
-    )
-    private void vaultBlastResistanceTo3$LMS(
-            Explosion explosion,
-            BlockGetter world,
-            BlockPos pos,
-            BlockState blockState,
-            FluidState fluidState,
-            CallbackInfoReturnable<Optional<Float>> cir
-    )
-    {
-        if (FragileVaultRule.fragileVault && blockState.is(Blocks.VAULT))
-        {
+@Mixin(ExplosionDamageCalculator.class)
+public abstract class FragileVaultMixin {
+    @Inject(method = "getBlockExplosionResistance", at = @At("HEAD"), cancellable = true)
+    private void vaultBlastResistanceTo3$LMS(Explosion explosion, BlockGetter world, BlockPos pos,
+        BlockState blockState, FluidState fluidState, CallbackInfoReturnable<Optional<Float>> cir) {
+        if (Settings.fragileVault && blockState.is(Blocks.VAULT)) {
             cir.setReturnValue(Optional.of(3.0F));
         }
     }

@@ -26,27 +26,21 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import cn.nm.lms.carpetlmsaddition.lib.check.CheckName;
-import cn.nm.lms.carpetlmsaddition.rule.entity.projectile.PearlNoTpRule;
+import cn.nm.lms.carpetlmsaddition.rule.Settings;
 
-@Mixin(
-    ThrownEnderpearl.class
-)
-public abstract class PearlNoTpMixin
-{
-    @Inject(
-            method = "onHit(Lnet/minecraft/world/phys/HitResult;)V",
-            at = @At(
-                "HEAD"
-            ),
-            cancellable = true
-    )
-    private void disableTeleportWhenNamed$LMS(HitResult _unusedResult, CallbackInfo ci)
-    {
-        ThrownEnderpearl pearl = (ThrownEnderpearl) (Object) this;
-        if (pearl.level().isClientSide()) return;
+@Mixin(ThrownEnderpearl.class)
+public abstract class PearlNoTpMixin {
+    @Inject(method = "onHit(Lnet/minecraft/world/phys/HitResult;)V", at = @At("HEAD"), cancellable = true)
+    private void disableTeleportWhenNamed$LMS(HitResult _unusedResult, CallbackInfo ci) {
+        ThrownEnderpearl pearl = (ThrownEnderpearl)(Object)this;
+        if (pearl.level().isClientSide()) {
+            return;
+        }
         ItemStack stack = pearl.getItem();
         String name = stack.getHoverName().getString();
-        if (!CheckName.checkName(name, PearlNoTpRule.pearlNoTp, "noTp")) return;
+        if (!CheckName.checkName(name, Settings.pearlNoTp, "noTp")) {
+            return;
+        }
         ci.cancel();
         pearl.discard();
     }

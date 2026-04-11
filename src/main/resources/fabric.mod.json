@@ -14,7 +14,7 @@
   "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": ["cn.nm.lms.carpetlmsaddition.CarpetLMSAdditionMod"]
+    "main": ["cn.nm.lms.carpetlmsaddition.Mod"]
   },
   "mixins": ["carpet-lms-addition.mixins.json"],
   "accessWidener": "carpet-lms-addition.accesswidener",

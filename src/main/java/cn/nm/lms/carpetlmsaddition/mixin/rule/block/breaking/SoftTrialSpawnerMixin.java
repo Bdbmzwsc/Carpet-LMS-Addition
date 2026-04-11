@@ -28,31 +28,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import cn.nm.lms.carpetlmsaddition.rule.block.breaking.SoftTrialSpawnerRule;
+import cn.nm.lms.carpetlmsaddition.rule.Settings;
 
-@Mixin(
-    BlockStateBase.class
-)
-public abstract class SoftTrialSpawnerMixin
-{
+@Mixin(BlockStateBase.class)
+public abstract class SoftTrialSpawnerMixin {
     @Shadow
     public abstract Block getBlock();
 
-    @Inject(
-            method = "getDestroySpeed",
-            at = @At(
-                "RETURN"
-            ),
-            cancellable = true
-    )
-    private void trialSpawnerHardnessTo5$LMS(
-            BlockGetter world,
-            BlockPos pos,
-            CallbackInfoReturnable<Float> cir
-    )
-    {
-        if (SoftTrialSpawnerRule.softTrialSpawner && this.getBlock() == Blocks.TRIAL_SPAWNER)
-        {
+    @Inject(method = "getDestroySpeed", at = @At("RETURN"), cancellable = true)
+    private void trialSpawnerHardnessTo5$LMS(BlockGetter world, BlockPos pos, CallbackInfoReturnable<Float> cir) {
+        if (Settings.softTrialSpawner && this.getBlock() == Blocks.TRIAL_SPAWNER) {
             cir.setReturnValue(3.0F);
         }
     }
