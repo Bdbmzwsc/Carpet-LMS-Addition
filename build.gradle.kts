@@ -3,8 +3,8 @@ import java.nio.file.Path
 plugins {
     `maven-publish`
     signing
-    id("net.fabricmc.fabric-loom") version "1.15-SNAPSHOT" apply false
-    id("net.fabricmc.fabric-loom-remap") version "1.15-SNAPSHOT" apply false
+    id("net.fabricmc.fabric-loom") version "1.16-SNAPSHOT" apply false
+    id("net.fabricmc.fabric-loom-remap") version "1.16-SNAPSHOT" apply false
 
     // https://github.com/ReplayMod/preprocessor
     // https://github.com/Fallen-Breath/preprocessor
