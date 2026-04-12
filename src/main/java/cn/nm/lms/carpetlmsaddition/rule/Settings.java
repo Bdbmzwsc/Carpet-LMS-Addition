@@ -20,6 +20,8 @@ import carpet.api.settings.Rule;
 import carpet.api.settings.RuleCategory;
 import carpet.api.settings.Validators;
 
+import cn.nm.lms.carpetlmsaddition.rule.recipe.observer.RecipeRuleObserver;
+
 public final class Settings {
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL}, validators = {Validators.NonNegativeNumber.class})
     public static int allayHealInterval = 10;
@@ -40,10 +42,10 @@ public final class Settings {
         strict = false)
     public static String dispenserBarteringName = "false";
 
-    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL})
+    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL}, validators = {RecipeRuleObserver.class})
     public static boolean elytraRecipe = false;
 
-    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL})
+    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL}, validators = {RecipeRuleObserver.class})
     public static boolean enchantedGoldenAppleRecipe = false;
 
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL})
@@ -107,7 +109,7 @@ public final class Settings {
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL})
     public static boolean softVault = false;
 
-    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL})
+    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL}, validators = {RecipeRuleObserver.class})
     public static boolean spongeRecipe = false;
 
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL})

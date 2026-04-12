@@ -18,10 +18,12 @@
     "entity.shulker.ShulkerDupLowHealthFailChanceMixin",
     "entity.shulker.ShulkerDupNearbyLimitMixin",
     "furnace.ShulkerBoxFurnaceMixin",
+    "recipe.RecipeManagerMixin",
     "util.chunk.loader.helmet.ServerPlayerHelmetTickMixin",
     "util.chunk.loader.helmet.SimulationDistanceMixin",
     "util.chunk.loader.helmet.ViewDistanceMixin",
     "util.chunk.loader.minecart.MinecartChunkLoaderMixin",
+    "util.command.CommandsMixin",
     "util.command.opplayernocheatextra.OpPlayerNoCheatExtraClearMixin",
     "util.command.opplayernocheatextra.OpPlayerNoCheatExtraDamageMixin",
     "util.command.opplayernocheatextra.OpPlayerNoCheatExtraFillBiomeMixin",
@@ -30,7 +32,8 @@
     "util.command.opplayernocheatextra.OpPlayerNoCheatExtraPlaceMixin",
     "util.command.opplayernocheatextra.OpPlayerNoCheatExtraSpawnpointMixin",
     "util.command.playercommanddropall.EntityPlayerActionPackActionMixin",
-    "util.command.playercommanddropall.PlayerCommandDropallMixin"
+    "util.command.playercommanddropall.PlayerCommandDropallMixin",
+    "util.helper.LowHealthSpectatorMixin"
   ],
   "injectors": {
     "defaultRequire": 1

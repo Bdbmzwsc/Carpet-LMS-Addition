@@ -1,6 +1,5 @@
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import net.fabricmc.loom.api.LoomGradleExtensionAPI
-import net.fabricmc.loom.api.fabricapi.FabricApiExtension
 
 val mcVersion = (project.extra["mcVersion"] as Number).toInt()
 val unobfuscated = mcVersion >= 26_00_00
@@ -13,7 +12,6 @@ apply(plugin = "com.vanniktech.maven.publish")
 val minecraftVersion: String by project
 val parchmentVersion: String by project
 val loaderVersion: String by project
-val fabricApiVersion: String by project
 val carpetVersion: String by project
 val conditionalMixinVersion: String by project
 val mixinExtrasVersion: String by project
@@ -54,7 +52,6 @@ repositories {
 }
 
 val loomExtension = extensions.getByType(LoomGradleExtensionAPI::class)
-val fabricApiExtension = extensions.getByType(FabricApiExtension::class)
 
 dependencies {
     fun processDependency(dep: Dependency?): Dependency? {
@@ -88,7 +85,6 @@ dependencies {
         )
     }
     autoImplementation("net.fabricmc:fabric-loader:$loaderVersion")
-    autoImplementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
     autoImplementation("carpet:fabric-carpet:$carpetVersion")
 
     autoCompileOnly("org.jspecify:jspecify:1.0.0")
@@ -104,20 +100,6 @@ dependencies {
     }
     autoRuntimeOnly("me.fallenbreath:mixin-auditor:0.2.0-${if (unobfuscated) "u" else "o"}")
 
-    // dependencies
-    val fabricApiModules = mutableListOf<String>()
-    if (mcVersion >= 12105) { // "fabric-resource-loader-v0" dependency since fabric api 0.117.0 (25w07a, mc1.21.5 snapshot)
-        fabricApiModules.add("fabric-api-base")
-    }
-    if (mcVersion < 12111) { // "fabric-resource-loader" is fully moved from v0 to v1 since fabric api 0.139.3 (1.21.11-pre4)
-        fabricApiModules.add("fabric-resource-loader-v0")
-    }
-    if (mcVersion >= 12109) { // "fabric-resource-loader-v0" dependency since fabric api 0.133.11 (1.21.9-rc1)
-        fabricApiModules.add("fabric-resource-loader-v1")
-    }
-    fabricApiModules.forEach {
-        includeDependency(autoImplementation(fabricApiExtension.module(it, fabricApiVersion)))
-    }
     includeDependency(autoImplementation("me.fallenbreath:conditional-mixin-fabric:$conditionalMixinVersion"))
     if (mcVersion < 12005) {
         includeDependency("io.github.llamalad7:mixinextras-fabric:$mixinExtrasVersion")

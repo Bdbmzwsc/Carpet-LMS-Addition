@@ -14,17 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Carpet LMS Addition.  If not, see <https://www.gnu.org/licenses/>.
  */
-package cn.nm.lms.carpetlmsaddition;
+package cn.nm.lms.carpetlmsaddition.rule.util.command;
 
-import cn.nm.lms.carpetlmsaddition.rule.block.dispenser.bartering.DispenserBarteringInit;
-import cn.nm.lms.carpetlmsaddition.rule.recipe.crafting.helper.RecipesInit;
-import cn.nm.lms.carpetlmsaddition.rule.util.chunk.loader.MinecartChunkLoaderInit;
+import java.util.List;
 
-public final class Init {
-    public static void initAll() {
-        MinecartChunkLoaderInit.class.getName();
-        Translations.init();
-        RecipesInit.class.getName();
-        DispenserBarteringInit.init();
+import net.minecraft.commands.CommandSourceStack;
+
+import com.mojang.brigadier.CommandDispatcher;
+
+public final class LMSCommands {
+    private static final List<Command> COMMANDS = List.of(new CommandLms());
+
+    public static void registerAll(CommandDispatcher<CommandSourceStack> dispatcher) {
+        for (Command cmd : COMMANDS) {
+            cmd.register(dispatcher);
+        }
     }
 }

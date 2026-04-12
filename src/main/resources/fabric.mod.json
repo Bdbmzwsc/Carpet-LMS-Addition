@@ -14,14 +14,14 @@
   "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": ["cn.nm.lms.carpetlmsaddition.Mod"]
+    "main": ["cn.nm.lms.carpetlmsaddition.Mod"],
+    "preLaunch": ["cn.nm.lms.carpetlmsaddition.PreLaunch"]
   },
   "mixins": ["carpet-lms-addition.mixins.json"],
   "accessWidener": "carpet-lms-addition.accesswidener",
   "depends": {
     "fabricloader": "${fabricloader_dependency}",
     "minecraft": "${minecraft_dependency}",
-    "fabric-api": "*",
     "carpet": "*"
   },
   "custom": {

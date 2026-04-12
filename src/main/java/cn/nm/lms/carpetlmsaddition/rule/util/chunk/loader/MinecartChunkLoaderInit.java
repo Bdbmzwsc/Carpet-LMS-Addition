@@ -46,6 +46,4 @@ public enum MinecartChunkLoaderInit {
 
         throw new IllegalArgumentException("Invalid timeout value: " + timeout);
     }
-
-    public static void init() {}
 }

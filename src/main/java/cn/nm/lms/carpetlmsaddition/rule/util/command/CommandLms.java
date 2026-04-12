@@ -27,6 +27,7 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
+import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
@@ -35,14 +36,12 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-
 import carpet.utils.CommandHelper;
 
 import cn.nm.lms.carpetlmsaddition.lib.PlayerConfig;
 import cn.nm.lms.carpetlmsaddition.rule.Settings;
 
-public final class CommandLMS {
+public final class CommandLms implements Command {
     private static final String COMMAND = "lms";
     private static final String ARG_PLAYER = "player";
     private static final String ARG_CONFIG = "config";
@@ -151,21 +150,21 @@ public final class CommandLMS {
     }
 
     private static RequiredArgumentBuilder<CommandSourceStack, String> buildValueArg() {
-        return Commands.argument(ARG_VALUE, StringArgumentType.word()).suggests(CommandLMS::suggestValues)
-            .executes(CommandLMS::executeSet);
+        return Commands.argument(ARG_VALUE, StringArgumentType.word()).suggests(CommandLms::suggestValues)
+            .executes(CommandLms::executeSet);
     }
 
     private static RequiredArgumentBuilder<CommandSourceStack, String> buildConfigArg() {
-        return Commands.argument(ARG_CONFIG, StringArgumentType.word()).suggests(CommandLMS::suggestConfigs)
-            .executes(CommandLMS::executeGet).then(buildValueArg());
+        return Commands.argument(ARG_CONFIG, StringArgumentType.word()).suggests(CommandLms::suggestConfigs)
+            .executes(CommandLms::executeGet).then(buildValueArg());
     }
 
     private static ArgumentBuilder<CommandSourceStack, ?> buildPlayerArg() {
         return Commands.argument(ARG_PLAYER, EntityArgument.player()).then(buildConfigArg());
     }
 
-    public static void init() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher
-            .register(Commands.literal(COMMAND).then(buildPlayerArg())));
+    @Override
+    public void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(Commands.literal(COMMAND).then(buildPlayerArg()));
     }
 }

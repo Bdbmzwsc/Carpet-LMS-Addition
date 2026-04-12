@@ -14,17 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with Carpet LMS Addition.  If not, see <https://www.gnu.org/licenses/>.
  */
-package cn.nm.lms.carpetlmsaddition;
+package cn.nm.lms.carpetlmsaddition.rule.recipe.observer;
 
-import cn.nm.lms.carpetlmsaddition.rule.block.dispenser.bartering.DispenserBarteringInit;
-import cn.nm.lms.carpetlmsaddition.rule.recipe.crafting.helper.RecipesInit;
-import cn.nm.lms.carpetlmsaddition.rule.util.chunk.loader.MinecartChunkLoaderInit;
+import java.util.Objects;
 
-public final class Init {
-    public static void initAll() {
-        MinecartChunkLoaderInit.class.getName();
-        Translations.init();
-        RecipesInit.class.getName();
-        DispenserBarteringInit.init();
+import net.minecraft.commands.CommandSourceStack;
+
+import carpet.api.settings.CarpetRule;
+import carpet.api.settings.Validator;
+
+import cn.nm.lms.carpetlmsaddition.rule.recipe.runtime.RecipeRuleHelper;
+
+public final class RecipeRuleObserver extends Validator<Boolean> {
+    @Override
+    public Boolean validate(CommandSourceStack source, CarpetRule<Boolean> currentRule, Boolean newValue,
+        String userInput) {
+        if (!Objects.equals(currentRule.value(), newValue)) {
+            RecipeRuleHelper.onValueChange();
+        }
+        return newValue;
     }
 }

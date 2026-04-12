@@ -16,15 +16,13 @@
  */
 package cn.nm.lms.carpetlmsaddition;
 
-import cn.nm.lms.carpetlmsaddition.rule.block.dispenser.bartering.DispenserBarteringInit;
-import cn.nm.lms.carpetlmsaddition.rule.recipe.crafting.helper.RecipesInit;
-import cn.nm.lms.carpetlmsaddition.rule.util.chunk.loader.MinecartChunkLoaderInit;
+import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 
-public final class Init {
-    public static void initAll() {
-        MinecartChunkLoaderInit.class.getName();
-        Translations.init();
-        RecipesInit.class.getName();
-        DispenserBarteringInit.init();
+import com.llamalad7.mixinextras.MixinExtrasBootstrap;
+
+public class PreLaunch implements PreLaunchEntrypoint {
+    @Override
+    public void onPreLaunch() {
+        MixinExtrasBootstrap.init();
     }
 }

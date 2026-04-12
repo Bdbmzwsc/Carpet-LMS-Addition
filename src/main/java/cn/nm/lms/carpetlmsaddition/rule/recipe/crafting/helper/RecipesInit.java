@@ -27,20 +27,21 @@ import cn.nm.lms.carpetlmsaddition.rule.recipe.crafting.CraftableEnchantedGolden
 import cn.nm.lms.carpetlmsaddition.rule.recipe.crafting.CraftableSponge;
 
 public final class RecipesInit {
-    public static final RecipeSerializer<CraftableElytra> CRAFTABLE_ELYTRA =
-        CompatRecipeSerializer.simple(CraftableElytra::new);
-    public static final RecipeSerializer<CraftableEnchantedGoldenApple> CRAFTABLE_ENCHANTED_GOLDEN_APPLE =
-        CompatRecipeSerializer.simple(CraftableEnchantedGoldenApple::new);
-    public static final RecipeSerializer<CraftableSponge> CRAFTABLE_SPONGE =
-        CompatRecipeSerializer.simple(CraftableSponge::new);
+    public static final RecipeSerializer<ShapedRecipe> CRAFTABLE_ELYTRA;
+    public static final RecipeSerializer<ShapedRecipe> CRAFTABLE_ENCHANTED_GOLDEN_APPLE;
+    public static final RecipeSerializer<ShapedRecipe> CRAFTABLE_SPONGE;
 
-    public static void init() {
-        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,
-            Identifier.fromNamespaceAndPath(Mod.MOD_ID, "craftableelytra"), CRAFTABLE_ELYTRA);
-        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,
+    static {
+        CRAFTABLE_ELYTRA = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,
+            Identifier.fromNamespaceAndPath(Mod.MOD_ID, "craftableelytra"),
+            CompatRecipeSerializer.simple(CraftableElytra::new));
+
+        CRAFTABLE_ENCHANTED_GOLDEN_APPLE = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,
             Identifier.fromNamespaceAndPath(Mod.MOD_ID, "craftableenchantedgoldenapple"),
-            CRAFTABLE_ENCHANTED_GOLDEN_APPLE);
-        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,
-            Identifier.fromNamespaceAndPath(Mod.MOD_ID, "craftablesponge"), CRAFTABLE_SPONGE);
+            CompatRecipeSerializer.simple(CraftableEnchantedGoldenApple::new));
+
+        CRAFTABLE_SPONGE = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,
+            Identifier.fromNamespaceAndPath(Mod.MOD_ID, "craftablesponge"),
+            CompatRecipeSerializer.simple(CraftableSponge::new));
     }
 }

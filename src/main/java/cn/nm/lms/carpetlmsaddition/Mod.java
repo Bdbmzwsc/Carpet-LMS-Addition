@@ -16,6 +16,9 @@
  */
 package cn.nm.lms.carpetlmsaddition;
 
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -27,6 +30,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import cn.nm.lms.carpetlmsaddition.rule.Bootstrap;
+import cn.nm.lms.carpetlmsaddition.rule.recipe.runtime.RecipeBookHelper;
+import cn.nm.lms.carpetlmsaddition.rule.recipe.runtime.RecipeRuleHelper;
 
 public class Mod implements ModInitializer, CarpetExtension {
     public static final String MOD_ID = "carpet-lms-addition";
@@ -61,6 +66,16 @@ public class Mod implements ModInitializer, CarpetExtension {
     @Override
     public java.util.Map<String, String> canHasTranslations(String lang) {
         return Translations.translations(lang);
+    }
+
+    @Override
+    public void onServerLoadedWorlds(MinecraftServer server) {
+        RecipeRuleHelper.flushPendingReload(server);
+    }
+
+    @Override
+    public void onPlayerLoggedIn(ServerPlayer player) {
+        RecipeBookHelper.syncPlayer(player);
     }
 
     private static class ModInfoHolder {
