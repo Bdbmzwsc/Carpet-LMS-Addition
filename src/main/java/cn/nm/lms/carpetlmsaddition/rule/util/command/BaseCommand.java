@@ -16,18 +16,10 @@
  */
 package cn.nm.lms.carpetlmsaddition.rule.util.command;
 
-import java.util.List;
-
 import net.minecraft.commands.CommandSourceStack;
 
 import com.mojang.brigadier.CommandDispatcher;
 
-public final class LMSCommands {
-    private static final List<Command> COMMANDS = List.of(new CommandLms());
-
-    public static void registerAll(CommandDispatcher<CommandSourceStack> dispatcher) {
-        for (Command cmd : COMMANDS) {
-            cmd.register(dispatcher);
-        }
-    }
+public interface BaseCommand {
+    void register(CommandDispatcher<CommandSourceStack> dispatcher);
 }

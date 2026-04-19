@@ -120,4 +120,20 @@ public final class Settings {
 
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL, RuleCategory.BUGFIX})
     public static boolean zombifiedPiglinSpawnFix = false;
+
+    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.COMMAND, RuleCategory.SURVIVAL, RuleCategory.CREATIVE},
+        validators = {Validators.CommandLevel.class})
+    public static String commandCheckStorageData = "false";
+
+    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL, RuleCategory.CREATIVE},
+        validators = {Validators.NonNegativeNumber.class})
+    public static int checkStorageAutoUpdateDataInterval = 0;
+
+    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.COMMAND, RuleCategory.SURVIVAL, RuleCategory.CREATIVE},
+        validators = {Validators.CommandLevel.class})
+    public static String commandCheckStorageServer = "false";
+
+    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.COMMAND, RuleCategory.SURVIVAL, RuleCategory.CREATIVE},
+        validators = {Validators.CommandLevel.class})
+    public static String commandSetPassword = "false";
 }

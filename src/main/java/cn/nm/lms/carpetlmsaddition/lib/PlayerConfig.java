@@ -16,39 +16,25 @@
  */
 package cn.nm.lms.carpetlmsaddition.lib;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
 import java.util.UUID;
-
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.level.storage.LevelResource;
-
-import carpet.CarpetServer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import cn.nm.lms.carpetlmsaddition.Mod;
+import cn.nm.lms.carpetlmsaddition.lib.getvalue.GetPaths;
 
 public final class PlayerConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final String PLAYER_CONFIG_KEY = "playerConfig";
     private static JsonObject root;
     private static Path loadedFile;
 
     public static String get(UUID playerUUID, String configName) {
         JsonObject data = ensureLoaded();
-        JsonObject allConfig = data.getAsJsonObject(PLAYER_CONFIG_KEY);
-        if (allConfig == null) {
-            return null;
-        }
-        JsonObject perConfig = allConfig.getAsJsonObject(configName);
+        JsonObject perConfig = data.getAsJsonObject(configName);
         if (perConfig == null) {
             return null;
         }
@@ -58,22 +44,14 @@ public final class PlayerConfig {
     public static void set(UUID playerUUID, String configName, String value) {
         Path file = currentFile();
         JsonObject data = ensureLoaded();
-        JsonObject allConfig = data.getAsJsonObject(PLAYER_CONFIG_KEY);
-        if (allConfig == null) {
-            allConfig = new JsonObject();
-        }
-        JsonObject perConfig = allConfig.getAsJsonObject(configName);
+        JsonObject perConfig = data.getAsJsonObject(configName);
         if (perConfig == null) {
             perConfig = new JsonObject();
         }
         perConfig.addProperty(playerUUID.toString(), value);
-        allConfig.add(configName, perConfig);
-        data.add(PLAYER_CONFIG_KEY, allConfig);
+        data.add(configName, perConfig);
         try {
-            Files.createDirectories(file.getParent());
-            try (BufferedWriter writer = Files.newBufferedWriter(file)) {
-                GSON.toJson(data, writer);
-            }
+            AsyncFileIo.writeString(file, GSON.toJson(data));
             loadedFile = file;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -85,9 +63,9 @@ public final class PlayerConfig {
         if (root != null && file.equals(loadedFile)) {
             return root;
         }
-        if (Files.exists(file)) {
-            try (BufferedReader reader = Files.newBufferedReader(file)) {
-                root = JsonParser.parseReader(reader).getAsJsonObject();
+        if (AsyncFileIo.exists(file)) {
+            try {
+                root = JsonParser.parseString(AsyncFileIo.readString(file)).getAsJsonObject();
                 loadedFile = file;
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -100,8 +78,6 @@ public final class PlayerConfig {
     }
 
     private static Path currentFile() {
-        MinecraftServer server = CarpetServer.minecraft_server;
-        return Objects.requireNonNull(server, "Minecraft server not ready").getWorldPath(LevelResource.ROOT)
-            .resolve(Mod.COMPACT_NAME).resolve("config.json");
+        return GetPaths.getLmsWorldDataPath().resolve("playerConfig.json");
     }
 }

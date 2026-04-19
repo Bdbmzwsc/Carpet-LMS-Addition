@@ -29,6 +29,14 @@ export default defineConfig({
           label: "Rules",
           link: "/docs/rules",
         },
+        {
+          label: "Database",
+          link: "/docs/database",
+        },
+        {
+          label: "Config",
+          link: "/docs/config",
+        },
       ],
       components: {
         Head: "./src/components/Head.astro",

@@ -41,7 +41,7 @@ import carpet.utils.CommandHelper;
 import cn.nm.lms.carpetlmsaddition.lib.PlayerConfig;
 import cn.nm.lms.carpetlmsaddition.rule.Settings;
 
-public final class CommandLms implements Command {
+public final class CommandLms implements BaseCommand {
     private static final String COMMAND = "lms";
     private static final String ARG_PLAYER = "player";
     private static final String ARG_CONFIG = "config";

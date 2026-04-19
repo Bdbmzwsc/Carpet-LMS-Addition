@@ -29,9 +29,11 @@ import carpet.CarpetServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import cn.nm.lms.carpetlmsaddition.lib.AsyncTasks;
 import cn.nm.lms.carpetlmsaddition.rule.Bootstrap;
 import cn.nm.lms.carpetlmsaddition.rule.recipe.runtime.RecipeBookHelper;
 import cn.nm.lms.carpetlmsaddition.rule.recipe.runtime.RecipeRuleHelper;
+import cn.nm.lms.carpetlmsaddition.rule.util.storage.Website;
 
 public class Mod implements ModInitializer, CarpetExtension {
     public static final String MOD_ID = "carpet-lms-addition";
@@ -70,7 +72,20 @@ public class Mod implements ModInitializer, CarpetExtension {
 
     @Override
     public void onServerLoadedWorlds(MinecraftServer server) {
+        AsyncTasks.init();
         RecipeRuleHelper.flushPendingReload(server);
+        Website.autoStartFromConfigAfterWorldLoaded();
+    }
+
+    @Override
+    public void onServerClosed(MinecraftServer server) {
+        Website.stopServer();
+        AsyncTasks.shutdown();
+    }
+
+    @Override
+    public void onTick(MinecraftServer server) {
+        Website.tickAutoUpdateData();
     }
 
     @Override

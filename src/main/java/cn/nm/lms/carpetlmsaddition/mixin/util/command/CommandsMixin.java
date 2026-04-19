@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import cn.nm.lms.carpetlmsaddition.rule.util.command.LMSCommands;
+import cn.nm.lms.carpetlmsaddition.rule.util.command.SetupCommands;
 
 @Mixin(Commands.class)
 public abstract class CommandsMixin {
@@ -32,6 +32,6 @@ public abstract class CommandsMixin {
     private void onInit$lms(Commands.CommandSelection selection, CommandBuildContext context, CallbackInfo ci) {
         Commands self = (Commands)(Object)this;
 
-        LMSCommands.registerAll(self.getDispatcher());
+        SetupCommands.registerAll(self.getDispatcher());
     }
 }

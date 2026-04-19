@@ -27,8 +27,8 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import cn.nm.lms.carpetlmsaddition.lib.Utils;
 
 final class DispenserBarterInputParser {
-    private int barterRollCount;
     private final List<ItemStack> shulkerBoxesToDrop;
+    private int barterRollCount;
     private boolean valid;
 
     private DispenserBarterInputParser() {
@@ -64,18 +64,12 @@ final class DispenserBarterInputParser {
             if (container == null) {
                 return;
             }
-            for (ItemStack inner :
-            //#if MC>=260100
-            container.nonEmptyItemCopyStream().toList()
-            //#else
-            //$$ container.nonEmptyItemsCopy()
-            //#endif
-            ) {
+            Utils.nonItemCopyList(container).forEach(inner -> {
                 this.parseItemRecursively(inner.copyWithCount(inner.getCount() * shulkerCount));
                 if (!valid) {
                     return;
                 }
-            }
+            });
             return;
         }
         this.valid = false;

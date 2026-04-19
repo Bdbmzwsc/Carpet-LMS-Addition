@@ -15,6 +15,9 @@ val loaderVersion: String by project
 val carpetVersion: String by project
 val conditionalMixinVersion: String by project
 val mixinExtrasVersion: String by project
+val mysqlConnectorVersion: String by project
+val jbcryptVersion: String by project
+val nimbusJoseJwtVersion: String by project
 val modVersion: String by project
 val modId: String by project
 val modName: String by project
@@ -104,6 +107,10 @@ dependencies {
     if (mcVersion < 12005) {
         includeDependency("io.github.llamalad7:mixinextras-fabric:$mixinExtrasVersion")
     }
+
+    includeDependency(autoImplementation("com.mysql:mysql-connector-j:$mysqlConnectorVersion"))
+    includeDependency(autoImplementation("org.mindrot:jbcrypt:$jbcryptVersion"))
+    includeDependency(autoImplementation("com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion"))
 }
 
 val mixinConfigPath = "carpet-lms-addition.mixins.json"

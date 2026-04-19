@@ -16,10 +16,22 @@
  */
 package cn.nm.lms.carpetlmsaddition.rule.util.command;
 
+import java.util.List;
+
 import net.minecraft.commands.CommandSourceStack;
 
 import com.mojang.brigadier.CommandDispatcher;
 
-public interface Command {
-    void register(CommandDispatcher<CommandSourceStack> dispatcher);
+import cn.nm.lms.carpetlmsaddition.rule.util.storage.CommandCheckStorage;
+import cn.nm.lms.carpetlmsaddition.safety.CommandSetPassword;
+
+public final class SetupCommands {
+    private static final List<BaseCommand> COMMANDS =
+        List.of(new CommandLms(), new CommandCheckStorage(), new CommandSetPassword());
+
+    public static void registerAll(CommandDispatcher<CommandSourceStack> dispatcher) {
+        for (BaseCommand cmd : COMMANDS) {
+            cmd.register(dispatcher);
+        }
+    }
 }

@@ -7,12 +7,26 @@ carpet:
       desc: 控制悦灵的回血间隔（单位：gt）
       extra:
         "0": 设置为0时不回血
+    commandCheckStorageData:
+      name: 仓库检查数据命令
+      desc: 启用 "/checkStorage updateData" 命令
+    checkStorageAutoUpdateDataInterval:
+      name: 仓库检查数据自动更新间隔
+      desc: 设置 checkStorage 自动更新数据的间隔（单位：gt）
+      extra:
+        "0": 设置为0时不自动更新
+    commandCheckStorageServer:
+      name: 仓库检查服务命令
+      desc: 启用 "/checkStorage serverStatus", "/checkStorage startServer" 和 "/checkStorage stopServer" 命令
     commandLMSOthers:
       name: 管理他人LMS设置
       desc: 查看或修改其他玩家的 /lms 设置
     commandLMSSelf:
       name: 管理自己的LMS设置
       desc: 查看或修改自己的 /lms 设置
+    commandSetPassword:
+      name: 设置密码命令
+      desc: 启用 "/setPassword" 命令
     dispenserBartering:
       name: 发射器猪灵交易
       desc: 发射金物品会触发猪灵交易

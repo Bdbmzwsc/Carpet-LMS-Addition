@@ -34,6 +34,8 @@ bin/
 run/
 run-obsuscated/
 
+node_modules
 
 *.lck
 *.part
+.pnpm-store

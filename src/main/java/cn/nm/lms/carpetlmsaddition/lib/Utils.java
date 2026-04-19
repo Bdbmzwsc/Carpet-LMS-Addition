@@ -16,12 +16,42 @@
  */
 package cn.nm.lms.carpetlmsaddition.lib;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 
 public class Utils {
     public static boolean isShulkerBox(ItemStack stack) {
         return stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof ShulkerBoxBlock;
+    }
+
+    public static List<ItemStack> nonItemCopyList(ItemContainerContents container) {
+        //#if MC>=260100
+        return container.nonEmptyItemCopyStream().toList();
+        //#else
+        //$$ return iterableToList(container.nonEmptyItemsCopy());
+        //#endif
+    }
+
+    public static <T> List<T> iterableToList(Iterable<T> iterable) {
+        if (iterable == null) {
+            return Collections.emptyList();
+        }
+
+        if (iterable instanceof Collection) {
+            return new ArrayList<>((Collection<T>)iterable);
+        }
+
+        List<T> list = new ArrayList<>();
+        for (T item : iterable) {
+            list.add(item);
+        }
+        return list;
     }
 }

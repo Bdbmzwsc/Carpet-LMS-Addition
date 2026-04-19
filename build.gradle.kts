@@ -1,3 +1,5 @@
+import com.github.gradle.node.NodeExtension
+import com.github.gradle.node.pnpm.task.PnpmTask
 import java.nio.file.Path
 
 plugins {
@@ -16,10 +18,21 @@ plugins {
     id("com.diffplug.spotless") version "8.4.0"
     // https://github.com/vanniktech/gradle-maven-publish-plugin
     id("com.vanniktech.maven.publish") version "0.36.0"
+    // https://github.com/node-gradle/gradle-node-plugin
+    id("com.github.node-gradle.node") version "7.1.0" apply false
 }
 
 repositories {
     mavenCentral()
+}
+
+apply(plugin = "com.github.node-gradle.node")
+
+extensions.configure<NodeExtension> {
+    download.set(true)
+    version.set("24.14.1")
+    pnpmVersion.set("10.33.0")
+    nodeProjectDir.set(layout.projectDirectory.dir("storage-website").asFile)
 }
 
 val rootProjectRef: Project = project
@@ -82,6 +95,46 @@ tasks.register("buildAndGather") {
     }
 }
 
+val pnpmBuildStorageWebsite by tasks.registering(PnpmTask::class) {
+    group = "build"
+    description = "Builds the storage website via pnpm."
+    dependsOn(tasks.named("pnpmInstall"))
+    val frontendInputs =
+        project.fileTree(file("storage-website")) {
+            include("src/**")
+            include("package.json", "pnpm-lock.yaml", "index.html", "vite.config.ts")
+            include("tsconfig*.json", "env.d.ts", "eslint.config.ts")
+            exclude("node_modules/**", "dist/**")
+        }
+    inputs.files(frontendInputs)
+    outputs.dir(file("storage-website/dist"))
+    pnpmCommand.set(listOf("build"))
+}
+
+val syncStorageWebsiteDist by tasks.registering(Sync::class) {
+    group = "build"
+    description = "Copies storage website dist files into resources."
+    dependsOn(pnpmBuildStorageWebsite)
+    from(layout.projectDirectory.dir("storage-website/dist"))
+    into(layout.projectDirectory.dir("src/main/resources/websites/storage"))
+}
+
+val cleanStorageWebsiteResources by tasks.registering(Delete::class) {
+    delete(layout.projectDirectory.dir("src/main/resources/websites/storage"))
+}
+
+tasks.named("clean") {
+    dependsOn(cleanStorageWebsiteResources)
+}
+
+subprojects {
+    tasks
+        .matching { it.name == "processResources" || it.name == "preprocessResources" || it.name == "sourcesJar" }
+        .configureEach {
+            dependsOn(rootProject.tasks.named("syncStorageWebsiteDist"))
+        }
+}
+
 spotless {
     val licenseHeaderFile = rootProject.file("copyright.txt")
     kotlinGradle {
@@ -89,7 +142,7 @@ spotless {
         ktlint(libs.versions.ktlint.get())
     }
     java {
-        target("src/**/*.java", "versions/*/src/**/*.java")
+        target("src/main/java/**/*.java", "versions/*/src/main/java/**/*.java")
         removeUnusedImports()
         forbidWildcardImports()
         forbidModuleImports()
@@ -121,9 +174,18 @@ spotless {
             "website/*.yaml",
             "website/*.mjs",
             "website/public/*.html",
-            "src/main/resources/**/*.json",
-            "src/main/resources/**/*.yml",
+            "src/main/resources/*.json",
+            "src/main/resources/assets/**/*.yml",
+            "src/main/resources/assets/**/*.json",
             ".github/**/*.yml",
+            "storage-website/src/**/*.tsx",
+            "storage-website/src/**/*.ts",
+            "storage-website/src/**/*.vue",
+            "storage-website/src/**/*.json",
+            "storage-website/src/**/*.css",
+            "storage-website/*.json",
+            "storage-website/*.html",
+            "storage-website/*.ts",
         )
 
         prettier(
@@ -161,6 +223,7 @@ spotless {
             "mappings/*.txt",
             "website/public/_headers",
             "eclipse-importorder.txt",
+            "storage-website/src/i18n/mojang/version.txt",
         )
         trimTrailingWhitespace()
         endWithNewline()

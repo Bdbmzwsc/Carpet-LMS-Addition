@@ -6,10 +6,20 @@ carpet:
       desc: "Control the interval of allay healing (unit: gt)"
       extra:
         "0": 0 represents no healing
+    commandCheckStorageData:
+      desc: Enable "/checkStorage updateData" command
+    checkStorageAutoUpdateDataInterval:
+      desc: "Set the checkStorage data auto update interval (unit: gt)"
+      extra:
+        "0": Set to 0 to disable automatic updates
+    commandCheckStorageServer:
+      desc: Enable "/checkStorage serverStatus", "/checkStorage startServer" and "/checkStorage stopServer" command
     commandLMSOthers:
       desc: View or modify other players' /lms settings
     commandLMSSelf:
       desc: View or modify your own /lms settings
+    commandSetPassword:
+      desc: Enable "/setPassword" command
     dispenserBartering:
       desc: Trigger piglin bartering by dispensing gold items
       extra:
