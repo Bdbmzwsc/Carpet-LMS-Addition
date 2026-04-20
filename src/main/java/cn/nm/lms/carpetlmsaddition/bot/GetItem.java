@@ -46,7 +46,6 @@ import cn.nm.lms.carpetlmsaddition.rule.Settings;
 import cn.nm.lms.carpetlmsaddition.rule.util.storage.Storage;
 
 public class GetItem {
-    private static final int MAX_BOT_SCAN_ATTEMPTS = 4096;
     private static final Object GET_ITEM_SERIAL_LOCK = new Object();
 
     public static Map<String, Map<Item, Integer>> getItem(Item item, int count) {
@@ -245,13 +244,12 @@ public class GetItem {
 
     private static SpawnedFake spawnNextUsableBot(MinecraftServer server, ContainerTarget target, int startIndex) {
         int index = startIndex;
-        int maxIndex = startIndex + MAX_BOT_SCAN_ATTEMPTS;
+        int maxIndex = GetItemBotHelper.BOT_SCAN_LIMIT;
         while (index < maxIndex) {
-            String botName = getBotPrefix() + index;
+            String botName = GetItemBotHelper.getBotPrefix() + index;
             index++;
 
-            boolean nameOnline =
-                Utils.runOnServerThread(server, () -> server.getPlayerList().getPlayerByName(botName) != null);
+            boolean nameOnline = GetItemBotHelper.isBotOnline(server, botName);
             if (nameOnline) {
                 continue;
             }
@@ -268,15 +266,6 @@ public class GetItem {
             return new SpawnedFake(fakePlayer, botName, index);
         }
         throw new IllegalStateException("No available fake player name in range starting from " + startIndex);
-    }
-
-    private static String getBotPrefix() {
-        String prefix = Settings.getItemBotPrefix;
-        if (prefix == null) {
-            return "bot_getitem_";
-        }
-        String trimmed = prefix.trim();
-        return trimmed.isEmpty() ? "bot_getitem_" : trimmed;
     }
 
     private static void addOneBotResult(Map<String, Map<Item, Integer>> result, String botName, Item item, int count) {

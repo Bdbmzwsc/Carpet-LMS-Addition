@@ -33,6 +33,11 @@ public final class GetPaths {
         return server.getWorldPath(LevelResource.ROOT);
     }
 
+    public static Path getWorldPath(LevelResource levelResource) {
+        MinecraftServer server = CarpetServer.minecraft_server;
+        return server.getWorldPath(levelResource);
+    }
+
     public static Path getConfigPath() {
         return FabricLoader.getInstance().getConfigDir();
     }

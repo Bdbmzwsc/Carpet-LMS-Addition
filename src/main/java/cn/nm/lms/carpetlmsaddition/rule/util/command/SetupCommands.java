@@ -23,13 +23,14 @@ import net.minecraft.commands.CommandSourceStack;
 
 import com.mojang.brigadier.CommandDispatcher;
 
+import cn.nm.lms.carpetlmsaddition.bot.CommandCleanGetItemBot;
 import cn.nm.lms.carpetlmsaddition.bot.CommandGetItem;
 import cn.nm.lms.carpetlmsaddition.rule.util.storage.CommandCheckStorage;
 import cn.nm.lms.carpetlmsaddition.safety.CommandSetPassword;
 
 public final class SetupCommands {
-    private static final List<BaseCommand> COMMANDS =
-        List.of(new CommandLms(), new CommandCheckStorage(), new CommandSetPassword(), new CommandPlayerDropall());
+    private static final List<BaseCommand> COMMANDS = List.of(new CommandLms(), new CommandCheckStorage(),
+        new CommandSetPassword(), new CommandPlayerDropall(), new CommandCleanGetItemBot());
     private static final List<BaseCommandWithContext> COMMAND_WITH_CONTEXTS = List.of(new CommandGetItem());
 
     public static void registerAll(CommandDispatcher<CommandSourceStack> dispatcher,

@@ -42,7 +42,17 @@ public final class FakePlayerSpawner {
     }
 
     public static EntityPlayerMPFake spawnSurvivalFakeWithName(MinecraftServer server, String botName,
+        ResourceKey<Level> dimension, Vec3 spawnPos, float yaw, float pitch) {
+        return spawnSurvivalFakeWithName(server, botName, dimension, spawnPos, yaw, pitch, false);
+    }
+
+    public static EntityPlayerMPFake spawnSurvivalFakeWithName(MinecraftServer server, String botName,
         ResourceKey<Level> dimension, Vec3 spawnPos, boolean silence) {
+        return spawnSurvivalFakeWithName(server, botName, dimension, spawnPos, 0F, 0F, silence);
+    }
+
+    public static EntityPlayerMPFake spawnSurvivalFakeWithName(MinecraftServer server, String botName,
+        ResourceKey<Level> dimension, Vec3 spawnPos, float yaw, float pitch, boolean silence) {
         boolean nameOnline =
             Utils.runOnServerThread(server, () -> server.getPlayerList().getPlayerByName(botName) != null);
         if (nameOnline) {
@@ -50,7 +60,7 @@ public final class FakePlayerSpawner {
         }
 
         boolean created = Utils.runOnServerThread(server, () -> callWithSilence(silence, () -> EntityPlayerMPFake
-            .createFake(botName, server, spawnPos, 0.0, 0.0, dimension, GameType.SURVIVAL, false)));
+            .createFake(botName, server, spawnPos, yaw, pitch, dimension, GameType.SURVIVAL, false)));
         if (!created) {
             throw new IllegalStateException("Unable to spawn fake player: " + botName);
         }

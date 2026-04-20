@@ -141,6 +141,10 @@ public final class Settings {
         LMSRuleCategory.STORAGE}, validators = {Validators.CommandLevel.class})
     public static String commandGetItem = "false";
 
+    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.COMMAND, RuleCategory.SURVIVAL, RuleCategory.CREATIVE,
+        LMSRuleCategory.STORAGE}, validators = {Validators.CommandLevel.class})
+    public static String commandCleanGetItemBot = "false";
+
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL, RuleCategory.CREATIVE, LMSRuleCategory.STORAGE})
     public static String getItemBotPrefix = "bot_getitem_";
 

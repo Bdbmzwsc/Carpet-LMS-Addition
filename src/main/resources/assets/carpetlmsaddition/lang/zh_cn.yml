@@ -30,6 +30,9 @@ carpet:
     commandGetItem:
       name: 取物命令
       desc: 启用 "/getItem <item> <count>" 命令
+    commandCleanGetItemBot:
+      name: 取物假人检查命令
+      desc: 启用 "/cleanGetItemBot" 命令
     getItemBotPrefix:
       name: 取物假人前缀
       desc: 设置自动取物假人的命名前缀

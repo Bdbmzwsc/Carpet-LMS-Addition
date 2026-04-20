@@ -22,59 +22,51 @@ import java.nio.file.Path;
 import java.util.UUID;
 
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtAccounter;
-import net.minecraft.nbt.NbtIo;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.world.level.storage.LevelResource;
 
 import org.jspecify.annotations.NonNull;
 
+import cn.nm.lms.carpetlmsaddition.lib.PlayerUtils;
+import cn.nm.lms.carpetlmsaddition.lib.getvalue.GetPaths;
+
 public final class OfflineInvCheck {
     private OfflineInvCheck() {}
 
     static boolean isMainInvAndHotbarEmpty(MinecraftServer server, String name) {
-        UUID uuid = resolve(server, name);
-        Path playerDat = server.getWorldPath(LevelResource.PLAYER_DATA_DIR).resolve(uuid.toString() + ".dat");
+        ResolveResult resolved = resolve(server, name);
+        if (resolved.isOnlineProfile()) {
+            return false;
+        }
+
+        UUID uuid = resolved.uuid();
+        Path playerDat = GetPaths.getWorldPath(LevelResource.PLAYER_DATA_DIR).resolve(uuid.toString() + ".dat");
         if (!Files.exists(playerDat)) {
             return true;
         }
 
         try {
-            CompoundTag tag = NbtIo.readCompressed(playerDat, NbtAccounter.unlimitedHeap());
-            //#if MC>=12105
-            ListTag inv = tag.getList("Inventory").orElse(new ListTag());
-            //#else
-            //$$ ListTag inv = tag.getList("Inventory", net.minecraft.nbt.Tag.TAG_COMPOUND);
-            //#endif
-            for (int i = 0; i < inv.size(); i++) {
-                //#if MC>=12105
-                CompoundTag one = inv.getCompound(i).orElse(new CompoundTag());
-                int slot = one.getByte("Slot").orElse((byte)-1) & 255;
-                String itemId = one.getString("id").orElse("minecraft:air");
-                //#else
-                //$$ CompoundTag one = inv.getCompound(i);
-                //$$ int slot = one.getByte("Slot") & 255;
-                //$$ String itemId = one.getString("id");
-                //#endif
-                if (slot <= 35 && !"minecraft:air".equals(itemId)) {
-                    return false;
-                }
-            }
-            return true;
+            return PlayerUtils.isMainInvAndHotbarEmpty(playerDat);
         } catch (IOException e) {
             return true;
         }
     }
 
     @NonNull
-    private static UUID resolve(MinecraftServer server, @NonNull String name) {
-        UUID uuid = OldUsersConverter.convertMobOwnerIfNecessary(server, name);
-        if (uuid != null) {
-            return uuid;
+    private static ResolveResult resolve(MinecraftServer server, @NonNull String name) {
+        UUID offlineUuid = UUIDUtil.createOfflinePlayerUUID(name);
+        UUID resolvedUuid = OldUsersConverter.convertMobOwnerIfNecessary(server, name);
+        if (resolvedUuid != null) {
+            // If a name resolves to a UUID different from the offline UUID, treat it as an online/premium profile.
+            if (!resolvedUuid.equals(offlineUuid)) {
+                return new ResolveResult(offlineUuid, true);
+            }
+            return new ResolveResult(resolvedUuid, false);
         }
-        return UUIDUtil.createOfflinePlayerUUID(name);
+        return new ResolveResult(offlineUuid, false);
+    }
+
+    private record ResolveResult(UUID uuid, boolean isOnlineProfile) {
     }
 }

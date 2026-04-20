@@ -20,6 +20,8 @@ carpet:
       desc: Enable "/setPassword" command
     commandGetItem:
       desc: Enable "/getItem <item> <count>" command
+    commandCleanGetItemBot:
+      desc: Enable "/cleanGetItemBot" command
     getItemBotPrefix:
       desc: Set the naming prefix for auto item-fetch bots
       extra:
