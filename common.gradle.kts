@@ -290,6 +290,12 @@ extensions.configure<MavenPublishBaseExtension>("mavenPublishing") {
         }
         developers {
             developer {
+                id.set("Bdbmzwsc")
+                name.set("bdbmzwsc")
+                email.set("chinabdbmzwsc@outlook.com")
+                url.set("https://github.com/Bdbmzwsc")
+            }
+            developer {
                 id.set("jasonxue1")
                 name.set("jasonxue")
                 email.set("hi@jasonxue.dev")

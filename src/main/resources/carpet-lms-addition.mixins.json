@@ -2,6 +2,7 @@
   "required": true,
   "package": "cn.nm.lms.carpetlmsaddition.mixin",
   "compatibilityLevel": "{{COMPATIBILITY_LEVEL}}",
+  "plugin": "cn.nm.lms.carpetlmsaddition.MixinPlugin",
   "mixins": [
     "block.breaking.ExplosionProofBuddingAmethystMixin",
     "block.breaking.FragileTrialSpawnerMixin",
@@ -11,6 +12,7 @@
     "block.breaking.UnbreakableBuddingAmethystMixin",
     "block.util.VaultMaxBlacklistSizeMixin",
     "bug.ZombifiedPiglinSpawnFixMixin",
+    "compat.sgu.EntityPlayerMPFakeSguCompatMixin",
     "entity.allay.AllayHealIntervalMixin",
     "entity.projectile.PearlIgnoreEntityCollisionMixin",
     "entity.projectile.PearlNoTpMixin",

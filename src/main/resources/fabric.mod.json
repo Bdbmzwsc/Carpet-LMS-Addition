@@ -4,7 +4,7 @@
   "version": "${version}",
   "name": "${name}",
   "description": "${description}",
-  "authors": ["jasonxue", "stupidOIO", "小柠檬lemon酱"],
+  "authors": ["bdbmzwsc", "jasonxue", "stupidOIO", "小柠檬lemon酱"],
   "contact": {
     "homepage": "${website}",
     "issues": "${issues}",
