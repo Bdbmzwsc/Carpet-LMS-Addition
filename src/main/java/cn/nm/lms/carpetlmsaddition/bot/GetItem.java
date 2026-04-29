@@ -279,7 +279,7 @@ public class GetItem {
                 continue;
             }
             boolean offlineEmpty =
-                Utils.runOnServerThread(server, () -> OfflineInvCheck.isMainInvAndHotbarEmpty(server, botName));
+                Utils.runOnServerThread(server, () -> OfflineInvCheck.isInventoryEmpty(server, botName));
             if (!offlineEmpty) {
                 continue;
             }

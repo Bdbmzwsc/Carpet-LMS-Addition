@@ -34,7 +34,7 @@ import cn.nm.lms.carpetlmsaddition.lib.getvalue.GetPaths;
 public final class OfflineInvCheck {
     private OfflineInvCheck() {}
 
-    static boolean isMainInvAndHotbarEmpty(MinecraftServer server, String name) {
+    static boolean isInventoryEmpty(MinecraftServer server, String name) {
         ResolveResult resolved = resolve(server, name);
         if (resolved.isOnlineProfile()) {
             return false;
@@ -47,7 +47,7 @@ public final class OfflineInvCheck {
         }
 
         try {
-            return PlayerUtils.isMainInvAndHotbarEmpty(playerDat);
+            return PlayerUtils.isInventoryEmpty(playerDat);
         } catch (IOException e) {
             return true;
         }

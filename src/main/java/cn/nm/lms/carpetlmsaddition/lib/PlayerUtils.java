@@ -27,12 +27,16 @@ import net.minecraft.nbt.NbtIo;
 public final class PlayerUtils {
     private PlayerUtils() {}
 
-    public static boolean isMainInvAndHotbarEmpty(Path playerDat) throws IOException {
+    public static boolean isInventoryEmpty(Path playerDat) throws IOException {
         CompoundTag tag = NbtIo.readCompressed(playerDat, NbtAccounter.unlimitedHeap());
-        return isMainInvAndHotbarEmpty(tag);
+        return isInventoryEmpty(tag);
     }
 
-    public static boolean isMainInvAndHotbarEmpty(CompoundTag tag) {
+    public static boolean isInventoryEmpty(CompoundTag tag) {
+        return !hasInventoryItem(tag) && !hasEquipmentItem(tag);
+    }
+
+    private static boolean hasInventoryItem(CompoundTag tag) {
         //#if MC>=12105
         ListTag inv = tag.getList("Inventory").orElse(new ListTag());
         //#else
@@ -41,17 +45,50 @@ public final class PlayerUtils {
         for (int i = 0; i < inv.size(); i++) {
             //#if MC>=12105
             CompoundTag one = inv.getCompound(i).orElse(new CompoundTag());
-            int slot = one.getByte("Slot").orElse((byte)-1) & 255;
-            String itemId = one.getString("id").orElse("minecraft:air");
             //#else
             //$$ CompoundTag one = inv.getCompound(i);
-            //$$ int slot = one.getByte("Slot") & 255;
-            //$$ String itemId = one.getString("id");
             //#endif
-            if (slot <= 35 && !"minecraft:air".equals(itemId)) {
-                return false;
+            if (isItemTag(one)) {
+                return true;
             }
         }
-        return true;
+        return false;
+    }
+
+    private static boolean hasEquipmentItem(CompoundTag tag) {
+        //#if MC>=12105
+        return tag.getCompound("equipment").map(PlayerUtils::hasItemTagRecursive).orElse(false);
+        //#else
+        //$$ return false;
+        //#endif
+    }
+
+    private static boolean hasItemTagRecursive(CompoundTag tag) {
+        if (isItemTag(tag)) {
+            return true;
+        }
+        //#if MC>=12105
+        for (String key : tag.keySet()) {
+            if (tag.getCompound(key).map(PlayerUtils::hasItemTagRecursive).orElse(false)) {
+                return true;
+            }
+            ListTag list = tag.getList(key).orElse(new ListTag());
+            for (int i = 0; i < list.size(); i++) {
+                if (list.getCompound(i).map(PlayerUtils::hasItemTagRecursive).orElse(false)) {
+                    return true;
+                }
+            }
+        }
+        //#endif
+        return false;
+    }
+
+    private static boolean isItemTag(CompoundTag tag) {
+        //#if MC>=12105
+        String itemId = tag.getStringOr("id", "");
+        //#else
+        //$$ String itemId = tag.getString("id");
+        //#endif
+        return !itemId.isEmpty() && !"minecraft:air".equals(itemId);
     }
 }

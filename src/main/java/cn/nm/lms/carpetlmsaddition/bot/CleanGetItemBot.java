@@ -29,6 +29,7 @@ import net.minecraft.core.UUIDUtil;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraft.world.phys.Vec3;
@@ -76,7 +77,7 @@ public final class CleanGetItemBot {
         UUID uuid = UUIDUtil.createOfflinePlayerUUID(playerName);
         Path playerDat = playerDataDir.resolve(uuid.toString() + ".dat");
         try {
-            return !PlayerUtils.isMainInvAndHotbarEmpty(playerDat);
+            return !PlayerUtils.isInventoryEmpty(playerDat);
         } catch (Exception e) {
             return false;
         }
@@ -105,8 +106,9 @@ public final class CleanGetItemBot {
             return Utils.runOnServerThread(spawnData.server, () -> {
                 int dropped = 0;
                 ServerPlayerInterface playerInterface = (ServerPlayerInterface)bot;
-                for (int slot = 0; slot < 36 && dropped < max; slot++) {
-                    if (bot.getInventory().getItem(slot).isEmpty()) {
+                Inventory inv = bot.getInventory();
+                for (int slot = inv.getContainerSize(); slot >= 0 && dropped < max; slot--) {
+                    if (inv.getItem(slot).isEmpty()) {
                         continue;
                     }
                     playerInterface.getActionPack().drop(slot, true);
