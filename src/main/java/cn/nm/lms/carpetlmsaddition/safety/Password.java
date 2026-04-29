@@ -17,10 +17,6 @@
 package cn.nm.lms.carpetlmsaddition.safety;
 
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
 import com.google.gson.Gson;
@@ -54,23 +50,12 @@ public class Password {
         }
         String passwordHash = generateHash(password);
 
-        String sql = "INSERT INTO users (username, password) VALUES (?, ?)"
-            + "ON DUPLICATE KEY UPDATE password = VALUES(password)";
-
-        try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, username);
-            pstmt.setString(2, passwordHash);
-
-            pstmt.executeUpdate();
+        try {
+            UserPasswordStore.setPasswordHash(username, passwordHash);
             return Result.success();
-
-        } catch (DBUtil.SQLConnectionException e) {
-            Mod.LOGGER.warn("Database connection error while setting password", e);
-            return Result.failure("Database connection error");
-        } catch (SQLException e) {
-            Mod.LOGGER.warn("Database data error while setting password", e);
-            return Result.failure("Database data error");
+        } catch (UserPasswordStore.UserDataException e) {
+            Mod.LOGGER.warn("User data error while setting password", e);
+            return Result.failure("User data error");
         } catch (Exception e) {
             Mod.LOGGER.warn("Unknown error while setting password", e);
             return Result.failure("Unknown error");
@@ -88,27 +73,22 @@ public class Password {
         if (inputPassword == null || inputPassword.isBlank()) {
             return Result.failure("Password is empty");
         }
-        String sql = "SELECT password FROM users WHERE username = ?";
-
-        try (Connection conn = DBUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    String passwordHash = rs.getString("password");
-                    if (verified(inputPassword, passwordHash)) {
-                        String token = TokenManager.generateToken(secret, username, expireDay);
-                        return Result.success(username, token);
-                    }
-                    return Result.failure("Invalid username or password");
-                }
+        try {
+            String passwordHash = UserPasswordStore.getPasswordHash(username);
+            if (passwordHash == null) {
                 return Result.failure("Invalid username or password");
             }
-        } catch (DBUtil.SQLConnectionException e) {
-            Mod.LOGGER.warn("Database connection error while authenticating", e);
-            return Result.failure("Database connection error");
-        } catch (SQLException e) {
-            Mod.LOGGER.warn("Database data error while authenticating", e);
-            return Result.failure("Database data error");
+            if (verified(inputPassword, passwordHash)) {
+                String token = TokenManager.generateToken(secret, username, expireDay);
+                return Result.success(username, token);
+            }
+            return Result.failure("Invalid username or password");
+        } catch (IllegalArgumentException e) {
+            Mod.LOGGER.warn("Invalid user password hash while authenticating", e);
+            return Result.failure("User data error");
+        } catch (UserPasswordStore.UserDataException e) {
+            Mod.LOGGER.warn("User data error while authenticating", e);
+            return Result.failure("User data error");
         } catch (Exception e) {
             Mod.LOGGER.warn("Unknown error while authenticating", e);
             return Result.failure("Unknown error");

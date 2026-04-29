@@ -54,7 +54,11 @@ public final class GetPaths {
         return getLmsWorldPath().resolve("data");
     }
 
+    public static Path getLmsConfigDataPath() {
+        return getLmsConfigPath().resolve("data");
+    }
+
     public static Path getLmsConfigSecretPath() {
-        return getLmsConfigPath().resolve("secret");
+        return getLmsConfigDataPath().resolve("secret");
     }
 }

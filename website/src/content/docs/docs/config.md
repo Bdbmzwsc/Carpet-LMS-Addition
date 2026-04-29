@@ -3,20 +3,6 @@ title: Config
 description: Runtime JSON files under config/ and world/
 ---
 
-## database
-
-- Path: `config/carpetlmsaddition/database.json`
-- Purpose: Read when password login connects to the database (`url`, `user`, `password`).
-- Example:
-
-```json
-{
-  "url": "jdbc:mysql://127.0.0.1:3306/example",
-  "user": "example_user",
-  "password": "example_password"
-}
-```
-
 ## checkStorageConfig
 
 - Path: `world/carpetlmsaddition/checkStorageConfig.json`

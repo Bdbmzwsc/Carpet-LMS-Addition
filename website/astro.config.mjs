@@ -30,10 +30,6 @@ export default defineConfig({
           link: "/docs/rules",
         },
         {
-          label: "Database",
-          link: "/docs/database",
-        },
-        {
           label: "Config",
           link: "/docs/config",
         },

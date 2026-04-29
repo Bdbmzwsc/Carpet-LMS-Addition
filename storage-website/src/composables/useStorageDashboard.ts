@@ -132,11 +132,8 @@ export function useStorageDashboard() {
       if (detail === "Invalid username or password") {
         return t("errors.unauthorized");
       }
-      if (detail === "Database connection error") {
-        return t("errors.unauthorizedDatabaseConnection");
-      }
-      if (detail === "Database data error") {
-        return t("errors.unauthorizedDatabaseData");
+      if (detail === "User data error") {
+        return t("errors.unauthorizedUserData");
       }
       return t("errors.unauthorized");
     }
