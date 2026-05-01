@@ -8,7 +8,7 @@ import StorageList from "@/components/StorageList.vue";
 import { useStorageDashboard } from "@/composables/useStorageDashboard";
 
 const {
-  storages,
+  storagesWithAggregate,
   loading,
   refreshedAt,
   credentials,
@@ -78,7 +78,7 @@ const loginErrorMessage = computed(() =>
         />
 
         <StorageList
-          :storages="storages"
+          :storages="storagesWithAggregate"
           :loading="loading"
           :error-message="errorMessage"
           :get-item-display-name="getItemDisplayName"

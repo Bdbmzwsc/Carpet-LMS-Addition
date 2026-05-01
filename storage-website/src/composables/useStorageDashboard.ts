@@ -12,12 +12,14 @@ import {
 import { STORAGE_WEBSITE_LOCALE_KEY, type AppLocale } from "@/i18n";
 import type {
   PositionCount,
+  StorageErrorPosition,
   StorageItem,
   StorageResponse,
 } from "@/types/storage";
 
 const STORAGE_WEBSITE_AUTH_TOKEN_KEY = "storageWebsite.authToken";
 const STORAGE_WEBSITE_AUTH_USERNAME_KEY = "storageWebsite.authUsername";
+const AGGREGATE_STORAGE_NAME = "__aggregate__";
 
 type DashboardErrorCode =
   | "NETWORK_ERROR"
@@ -96,6 +98,70 @@ export function useStorageDashboard() {
       0,
     ),
   );
+  const storagesWithAggregate = computed<StorageResponse[]>(() => {
+    if (storages.value.length <= 1) {
+      return storages.value;
+    }
+
+    const aggregateItems: Record<string, StorageItem> = {};
+    const aggregateErrors: StorageErrorPosition[] = [];
+
+    for (const storage of storages.value) {
+      for (const [itemId, item] of Object.entries(storage.data.items)) {
+        if (!aggregateItems[itemId]) {
+          aggregateItems[itemId] = {
+            count: 0,
+            positionsByDimension: {},
+          };
+        }
+
+        const target = aggregateItems[itemId];
+        target.count += item.count;
+
+        for (const [dimension, positions] of Object.entries(
+          item.positionsByDimension,
+        )) {
+          const positionsByCoord = new Map<string, PositionCount>();
+
+          for (const existing of target.positionsByDimension[dimension] ?? []) {
+            const key = `${existing.pos.x},${existing.pos.y},${existing.pos.z}`;
+            positionsByCoord.set(key, {
+              ...existing,
+              pos: { ...existing.pos },
+            });
+          }
+
+          for (const pos of positions) {
+            const key = `${pos.pos.x},${pos.pos.y},${pos.pos.z}`;
+            const existing = positionsByCoord.get(key);
+            if (existing) {
+              existing.count += pos.count;
+            } else {
+              positionsByCoord.set(key, { ...pos, pos: { ...pos.pos } });
+            }
+          }
+
+          target.positionsByDimension[dimension] = Array.from(
+            positionsByCoord.values(),
+          );
+        }
+      }
+
+      aggregateErrors.push(
+        ...storage.data.errors.map((error) => ({ ...error })),
+      );
+    }
+
+    const aggregateStorage: StorageResponse = {
+      name: AGGREGATE_STORAGE_NAME,
+      data: {
+        items: aggregateItems,
+        errors: aggregateErrors,
+      },
+    };
+
+    return [aggregateStorage, ...storages.value];
+  });
 
   const errorMessage = computed(() => {
     if (!errorState.value) {
@@ -512,6 +578,7 @@ export function useStorageDashboard() {
     isAnonymousAccess,
     showData,
     requiresLogin,
+    storagesWithAggregate,
     storageCount,
     totalItemKinds,
     totalErrors,

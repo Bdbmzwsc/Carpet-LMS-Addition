@@ -70,6 +70,7 @@ export const messages = {
       unknown: "未知维度",
     },
     storage: {
+      aggregateName: "累积仓库",
       noItems: "该仓库没有物品数据",
       noErrors: "无错误点位",
       noPositionDetails: "暂无坐标明细",
@@ -162,6 +163,7 @@ export const messages = {
       unknown: "Unknown Dimension",
     },
     storage: {
+      aggregateName: "Aggregate",
       noItems: "No item data in this storage",
       noErrors: "No error positions",
       noPositionDetails: "No position details",

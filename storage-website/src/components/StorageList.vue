@@ -56,6 +56,7 @@ const props = defineProps({
 const { t } = useI18n();
 
 const ACTIVE_STORAGE_NAME_KEY = "storageWebsite.activeStorageName";
+const AGGREGATE_STORAGE_NAME = "__aggregate__";
 const expandedItemKeys = ref<Set<string>>(new Set());
 const expandedErrorKeys = ref<Set<string>>(new Set());
 const sortModeByStorage = ref<Record<string, SortMode>>({});
@@ -136,6 +137,13 @@ function selectStorage(storageName: string): void {
 
 function isActiveStorage(storageName: string): boolean {
   return activeStorageName.value === storageName;
+}
+
+function getStorageDisplayName(storageName: string): string {
+  if (storageName === AGGREGATE_STORAGE_NAME) {
+    return t("storage.aggregateName");
+  }
+  return storageName;
 }
 
 function getItemKey(storageName: string, itemId: string): string {
@@ -310,7 +318,7 @@ function getVisibleItemRows(storage: StorageResponse): ItemRow[] {
           "
           @click="selectStorage(storage.name)"
         >
-          {{ storage.name }}
+          {{ getStorageDisplayName(storage.name) }}
         </button>
       </div>
     </div>
@@ -325,7 +333,7 @@ function getVisibleItemRows(storage: StorageResponse): ItemRow[] {
           class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
         >
           <h2 class="text-lg font-semibold text-slate-100">
-            {{ activeStorage.name }}
+            {{ getStorageDisplayName(activeStorage.name) }}
           </h2>
           <input
             :value="getSearchQuery(activeStorage.name)"
