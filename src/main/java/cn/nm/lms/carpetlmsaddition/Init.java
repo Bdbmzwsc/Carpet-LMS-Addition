@@ -17,11 +17,9 @@
 package cn.nm.lms.carpetlmsaddition;
 
 import cn.nm.lms.carpetlmsaddition.rule.block.dispenser.bartering.DispenserBarteringInit;
-import cn.nm.lms.carpetlmsaddition.rule.util.chunk.loader.MinecartChunkLoaderInit;
 
 public final class Init {
     public static void initAll() {
-        MinecartChunkLoaderInit.class.getName();
         Translations.init();
         DispenserBarteringInit.init();
     }

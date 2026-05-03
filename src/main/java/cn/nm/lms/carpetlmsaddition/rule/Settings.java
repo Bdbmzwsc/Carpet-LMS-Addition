@@ -60,9 +60,6 @@ public final class Settings {
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL, RuleCategory.CREATIVE})
     public static boolean globalSlimeChunk = false;
 
-    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL, RuleCategory.CREATIVE})
-    public static boolean helmetControlsPlayerDistance = false;
-
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL}, options = {"true", "false", "custom"})
     public static String lowHealthSpectator = "false";
 
@@ -76,9 +73,6 @@ public final class Settings {
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL}, validators = {Validators.NonNegativeNumber.class},
         options = {"5", "10", "15", "20"}, strict = false)
     public static float lowHealthSpectatorThreshold = 5;
-
-    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL}, options = {"0", "1", "20", "300"})
-    public static int minecartChunkLoader = 0;
 
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL, RuleCategory.COMMAND})
     public static boolean opPlayerNoCheatExtra = false;

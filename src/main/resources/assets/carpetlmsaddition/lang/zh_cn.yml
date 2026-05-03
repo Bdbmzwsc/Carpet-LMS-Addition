@@ -86,13 +86,6 @@ carpet:
     globalSlimeChunk:
       name: 全局史莱姆区块
       desc: 将所有区块视为史莱姆区块
-    helmetControlsPlayerDistance:
-      name: 头盔控制加载距离
-      desc: "命名为 #load<数字> 的皮革头盔，会将佩戴者的模拟距离和渲染距离设置为指定的数字"
-      extra:
-        "0": 有效范围：[1，31]
-        "1": 渲染距离被限制在服务器的默认渲染距离内
-        "2": 模拟距离被限制在服务器的默认模拟距离内
     lowHealthSpectator:
       name: 低血量自动切换旁观
       desc: 当玩家生命值在受到伤害后低于设定的阈值时，将玩家切换到旁观者模式
@@ -105,12 +98,6 @@ carpet:
     lowHealthSpectatorThreshold:
       name: 低血量切换旁观阈值
       desc: 玩家生命值低于此阈值时，将被切换到旁观模式
-    minecartChunkLoader:
-      name: 动力矿车区块加载
-      desc: 动力矿车有燃料时，每 gt 会为所在区块发出一张时长为规则值（单位：gt）的加载票
-      extra:
-        "0": 设置为 0 时，动力矿车不会加载区块
-        "1": 加载票等级与地狱门相同
     opPlayerNoCheatExtra:
       name: 更好的防止op作弊
       desc: 禁用更多命令以防止作弊
