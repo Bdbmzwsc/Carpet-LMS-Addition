@@ -33,6 +33,13 @@ carpet:
     commandCleanGetItemBot:
       name: 取物假人检查命令
       desc: 启用 "/cleanGetItemBot" 命令
+    entityTeleportCrossDimension:
+      name: 跨维度传送实体
+      desc: 跨维度传送实体动量处理方案
+      extra:
+        "0": 设为origin时，不进行改变
+        "1": 设为1.21.9+时，启用1.21.9pre1+的方案
+        "2": 设为1.21.8-时，启用25w37a-的方案
     websiteGetItem:
       name: 网页取物 API
       desc: 启用储存网页的 getItem API

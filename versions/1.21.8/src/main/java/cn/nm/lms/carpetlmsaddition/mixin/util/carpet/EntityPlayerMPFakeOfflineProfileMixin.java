@@ -33,7 +33,7 @@ import carpet.patches.EntityPlayerMPFake;
 
 import cn.nm.lms.carpetlmsaddition.bot.FakePlayerSpawner;
 
-// >=1.21.9 counterpart:
+// >=1.21.9:
 // src/main/java/cn/nm/lms/carpetlmsaddition/mixin/util/carpet/EntityPlayerMPFakeOfflineProfileMixin.java
 @Mixin(EntityPlayerMPFake.class)
 public class EntityPlayerMPFakeOfflineProfileMixin {

@@ -22,6 +22,12 @@ carpet:
       desc: Enable "/getItem <item> <count>" command
     commandCleanGetItemBot:
       desc: Enable "/cleanGetItemBot" command
+    entityTeleportCrossDimension:
+      desc: Set how entity motion is handled during cross-dimension teleportation
+      extra:
+        "0": When set to origin, keeps vanilla behavior
+        "1": When set to 1.21.9+, uses the 1.21.9-pre1+ behavior
+        "2": When set to 1.21.8-, uses the 25w37a-and-earlier behavior
     websiteGetItem:
       desc: Enable getItem API for storage website
     getItemBotPrefix:

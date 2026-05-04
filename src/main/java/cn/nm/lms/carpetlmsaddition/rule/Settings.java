@@ -160,4 +160,10 @@ public final class Settings {
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL, RuleCategory.CREATIVE, LMSRuleCategory.STORAGE},
         validators = {Validators.NonNegativeNumber.class})
     public static int getItemMaxBots = 0;
+
+    //#if MC>=12102
+    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL, RuleCategory.CREATIVE},
+        options = {"origin", "1.21.9+", "1.21.8-"})
+    public static String entityTeleportCrossDimension = "origin";
+    //#endif
 }

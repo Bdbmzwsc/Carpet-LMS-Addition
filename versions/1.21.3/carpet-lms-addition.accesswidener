@@ -6,3 +6,5 @@ accessible field net/minecraft/world/level/block/entity/AbstractFurnaceBlockEnti
 accessible field net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity cookingProgress I
 accessible field net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity cookingTotalTime I
 accessible method net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity getBurnDuration (Lnet/minecraft/world/level/block/entity/FuelValues;Lnet/minecraft/world/item/ItemStack;)I
+accessible method net/minecraft/world/entity/Entity reapplyPosition ()V
+accessible field net/minecraft/world/entity/Entity movementThisTick Ljava/util/List;
