@@ -7,6 +7,7 @@ carpet:
       desc: 控制悦灵的回血间隔（单位：gt）
       extra:
         "0": 设置为0时不回血
+        "1": <0时不修改原版行为
     commandCheckStorageData:
       name: 仓库检查数据命令
       desc: 启用 "/checkStorage updateData" 命令
@@ -144,11 +145,13 @@ carpet:
       extra:
         "0": 失败概率 = 1 / value
         "1": 设置为0时不会失败
+        "2": <0时不修改原版行为
     shulkerDupNearbyLimit:
       name: 潜影贝复制附近数量限制
       desc: 设置根据附近数量减少潜影贝复制几率的除数
       extra:
         "0": 失败概率 = （附近潜影贝数量包括自身 - 1） / value
+        "1": <0时不修改原版行为
     softTrialSpawner:
       name: 易碎试炼刷怪笼
       desc: 将试炼刷怪笼的硬度设置为与信标相同
@@ -164,6 +167,8 @@ carpet:
     vaultMaxBlacklistSize:
       name: 宝库黑名单上限
       desc: 设置宝库黑名单中存储的最大玩家数量
+      extra:
+        "0": <0时不修改原版行为
     zombifiedPiglinSpawnFix:
       name: 僵尸猪灵生成修复
       desc: 当僵尸猪人在地狱门上受随机刻而生成时，将会检测他的碰撞箱来判断是否可以生成

@@ -23,8 +23,8 @@ import carpet.api.settings.Validators;
 import cn.nm.lms.carpetlmsaddition.rule.recipe.observer.RecipeRuleObserver;
 
 public final class Settings {
-    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL}, validators = {Validators.NonNegativeNumber.class})
-    public static int allayHealInterval = 10;
+    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL})
+    public static int allayHealInterval = -1;
 
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL, RuleCategory.COMMAND},
         validators = {Validators.CommandLevel.class})
@@ -91,11 +91,11 @@ public final class Settings {
         options = {"false", "force", "strict"})
     public static String shulkerBoxFurnace = "false";
 
-    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL}, validators = {Validators.NonNegativeNumber.class})
-    public static int shulkerDupLowHealthFailChance = 4;
+    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL})
+    public static int shulkerDupLowHealthFailChance = -1;
 
-    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL}, validators = {Validators.NonNegativeNumber.class})
-    public static int shulkerDupNearbyLimit = 5;
+    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL})
+    public static float shulkerDupNearbyLimit = -1.0F;
 
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL})
     public static boolean softTrialSpawner = false;
@@ -109,8 +109,8 @@ public final class Settings {
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL})
     public static boolean unbreakableBuddingAmethyst = false;
 
-    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL}, validators = {Validators.NonNegativeNumber.class})
-    public static int vaultMaxBlacklistSize = 128;
+    @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL})
+    public static int vaultMaxBlacklistSize = -1;
 
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL, RuleCategory.BUGFIX})
     public static boolean zombifiedPiglinSpawnFix = false;
@@ -147,7 +147,7 @@ public final class Settings {
 
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL, RuleCategory.CREATIVE, LMSRuleCategory.STORAGE},
         validators = {Validators.NonNegativeNumber.class})
-    public static int getItemDelayMs = 50;
+    public static int getItemDelayMs = 0;
 
     @Rule(categories = {LMSRuleCategory.LMS, RuleCategory.SURVIVAL, RuleCategory.CREATIVE, LMSRuleCategory.STORAGE},
         validators = {Validators.NonNegativeNumber.class})

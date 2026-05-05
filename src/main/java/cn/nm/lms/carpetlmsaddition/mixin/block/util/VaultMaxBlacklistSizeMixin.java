@@ -22,12 +22,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
+import cn.nm.lms.carpetlmsaddition.lib.Utils;
 import cn.nm.lms.carpetlmsaddition.rule.Settings;
 
 @Mixin(VaultServerData.class)
 public abstract class VaultMaxBlacklistSizeMixin {
     @ModifyConstant(method = "addToRewardedPlayers", constant = @Constant(intValue = 128, ordinal = 0))
-    private int changeBlacklistLimit$LMS(int _unusedOriginal) {
-        return Settings.vaultMaxBlacklistSize;
+    private int changeBlacklistLimit$LMS(int original) {
+        return Utils.nonNegativeOrOrigin(Settings.vaultMaxBlacklistSize, original);
     }
 }

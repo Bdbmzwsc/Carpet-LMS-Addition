@@ -102,4 +102,27 @@ public class Utils {
     public static Component itemDisplayName(Item item) {
         return new ItemStack(item).getHoverName();
     }
+
+    public static int nonNegativeOrOrigin(int value, int original) {
+        return value < 0 ? original : value;
+    }
+
+    public static float nonNegativeOrOrigin(float value, float original) {
+        return value < 0 ? original : value;
+    }
+
+    public static int nonZeroOrMax(int value) {
+        return value == 0 ? Integer.MAX_VALUE : value;
+    }
+
+    /**
+     * Returns a positive value. 0 -> Integer.MAX_VALUE, negative -> original
+     *
+     * @param value any
+     * @param fallback should be positive
+     * @return a positive value based on the rules above
+     */
+    public static int forcePositive(int value, int fallback) {
+        return nonNegativeOrOrigin(nonZeroOrMax(value), fallback);
+    }
 }

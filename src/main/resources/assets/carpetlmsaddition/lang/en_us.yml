@@ -4,6 +4,7 @@ carpet:
       desc: "Control the interval of allay healing (unit: gt)"
       extra:
         "0": 0 represents no healing
+        "1": <0 keeps vanilla behavior
     commandCheckStorageData:
       desc: Enable "/checkStorage updateData" command
     checkStorageAutoUpdateDataInterval:
@@ -120,10 +121,12 @@ carpet:
       extra:
         "0": Failure chance = 1 / value
         "1": 0 disables failure
+        "2": <0 keeps vanilla behavior
     shulkerDupNearbyLimit:
       desc: Sets the divisor used to reduce shulker duplication chance based on nearby count
       extra:
         "0": Failure chance = (nearbyShulkersIncludingSelf - 1) / value
+        "1": <0 keeps vanilla behavior
     softTrialSpawner:
       desc: Set the hardness of trial spawner to be the same as beacon
     softVault:
@@ -134,6 +137,8 @@ carpet:
       desc: Set the hardness of budding amethyst to be the same as bedrock
     vaultMaxBlacklistSize:
       desc: Set the maximum number of players stored in the vault's blacklist
+      extra:
+        "0": <0 keeps vanilla behavior
     zombifiedPiglinSpawnFix:
       desc: >-
         When spawning zombified piglins in nether gates during random ticks,
